@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowDown, ArrowRight, ArrowUp, BarChart3, Ban, Receipt, Truck, Users, Wallet, PieChart } from 'lucide-react'
+import { ArrowDown, ArrowRight, ArrowUp, BarChart3, Ban, Receipt, Truck, Users, Wallet, PieChart, HandCoins } from 'lucide-react'
 import { useApp } from '../../context/AppContext'
 import { useAuth } from '../../context/AuthContext'
 import { useAsync } from '../../hooks/useAsync'
@@ -104,6 +104,12 @@ export function MoneyPage() {
                   </div>
                 )}
               </Card>
+              {access.seesPayments && (
+                <>
+                  <Gap size="sm" />
+                  <RowGroup><ListRow to="/mas/pagos" icon={HandCoins} title="Pagos pendientes" subtitle="Jornales por liquidar a trabajadores" /></RowGroup>
+                </>
+              )}
               <SectionTitle>Distribución del gasto</SectionTitle>
               <Card>
                 {categories.length === 0 ? (

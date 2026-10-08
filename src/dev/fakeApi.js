@@ -7,13 +7,16 @@ export const PLANTING_ID = 's0000000-0000-4000-8000-000000000001'
 export const CYCLE_ID = 'y0000000-0000-4000-8000-000000000001'
 export const RISK_ID = 'r0000000-0000-4000-8000-000000000001'
 export const EVENT_ID = 'e0000000-0000-4000-8000-000000000001'
+export const PROCESS_ID = 'p0000000-0000-4000-8000-000000000001'
+export const SUPPLY_ID = 'n0000000-0000-4000-8000-000000000001'
 export const ROLES = ['admin', 'agricultor', 'contador', 'experto']
 
 const perm = (metodo, ruta) => ({ grupo: 'x', metodo, ruta, resumen: 'x' })
+const READS = [perm('GET', '/fincas/{finca_id}/jornales'), perm('GET', '/fincas/{finca_id}/insumos'), perm('GET', '/fincas/{finca_id}/procesos')]
 const PERMISSIONS = {
-  admin: [perm('GET', '/siembras'), perm('POST', '/siembras'), perm('GET', '/cultivos'), perm('GET', '/eventos-adversos'), perm('POST', '/usuarios')],
-  agricultor: [perm('GET', '/siembras'), perm('POST', '/siembras'), perm('GET', '/cultivos'), perm('GET', '/eventos-adversos')],
-  contador: [perm('GET', '/siembras')],
+  admin: [...READS, perm('GET', '/siembras'), perm('POST', '/siembras'), perm('GET', '/cultivos'), perm('GET', '/eventos-adversos'), perm('POST', '/usuarios')],
+  agricultor: [...READS, perm('GET', '/siembras'), perm('POST', '/siembras'), perm('GET', '/cultivos'), perm('GET', '/eventos-adversos')],
+  contador: [...READS, perm('GET', '/siembras')],
   experto: [],
 }
 const NAMES = { admin: 'Administrador local', agricultor: 'Hernando Gómez Restrepo', contador: 'Contadora de prueba', experto: 'Experto de prueba' }
@@ -107,6 +110,35 @@ function routes(opts) {
       { id: 'w2', finca_id: FARM_ID, nombre: 'Juan Camilo Henao Zuluaga de los Ríos', tipo: 'contratista', jornal_habitual: '1250000.00', documento_ultimos4: null, telefono: null, estado: 'activo' },
     ],
     [`POST fincas/${FARM_ID}/trabajadores`]: () => [201, {}],
+    [`GET fincas/${FARM_ID}/jornales`]: () => [
+      { id: 'j1', finca_id: FARM_ID, actividad_id: 'act-1', actividad_nombre: 'Socola y limpieza selectiva del lote', trabajador_id: 'w1', trabajador_nombre: 'Pedro Nel Builes', fecha: '2026-10-03', obreros: 1, dias: 3, total: '270000.00', estado: 'pendiente' },
+      { id: 'j2', finca_id: FARM_ID, actividad_id: 'act-1', actividad_nombre: 'Socola y limpieza selectiva del lote', trabajador_id: 'w1', trabajador_nombre: 'Pedro Nel Builes', fecha: '2026-10-04', obreros: 1, dias: 2, total: '180000.00', estado: 'pendiente' },
+      { id: 'j3', finca_id: FARM_ID, actividad_id: 'act-2', actividad_nombre: 'Plateo', trabajador_id: null, trabajador_nombre: null, fecha: '2026-10-05', obreros: 4, dias: 1, total: '360000.00', estado: 'pendiente' },
+    ],
+    [`POST fincas/${FARM_ID}/jornales/j1/pagar`]: () => [201, {}],
+    [`GET fincas/${FARM_ID}/insumos`]: () => [
+      { id: SUPPLY_ID, finca_id: FARM_ID, nombre: 'Fertilizante triple 15', unidad: 'bulto', existencia: '12.0', valor: '1800000.00', costo_promedio: '150000.00', ultimo_movimiento: '2026-10-01' },
+      { id: 'n2', finca_id: FARM_ID, nombre: 'Semilla de café Castillo variedad regional', unidad: 'kilo', existencia: '0', valor: '0', costo_promedio: null, ultimo_movimiento: null },
+    ],
+    [`POST fincas/${FARM_ID}/insumos`]: () => [201, {}],
+    [`GET fincas/${FARM_ID}/movimientos-insumo`]: () => [
+      { id: 'm1', insumo_id: SUPPLY_ID, tipo: 'entrada', cantidad: '20', costo: '3000000.00', fecha: '2026-09-20' },
+      { id: 'm2', insumo_id: SUPPLY_ID, tipo: 'consumo', cantidad: '8', costo: null, fecha: '2026-10-01' },
+    ],
+    [`POST fincas/${FARM_ID}/insumos/entrada`]: () => [201, {}],
+    [`POST fincas/${FARM_ID}/insumos/consumo`]: () => [201, {}],
+    [`GET fincas/${FARM_ID}/procesos`]: () => [
+      { id: PROCESS_ID, finca_id: FARM_ID, nombre: 'Secado de bijao lote 1', producto: 'Hoja de bijao seca', materia_prima: 'Hoja verde de bijao', origen_materia: 'propia', fecha_inicio: '2026-09-25', fecha_fin: null, etapas: 3, etapas_finalizadas: 1 },
+      { id: 'p2', finca_id: FARM_ID, nombre: 'Trilla de café', producto: 'Café pergamino', materia_prima: 'Café cereza', origen_materia: 'comprada', fecha_inicio: '2026-08-10', fecha_fin: '2026-08-20', etapas: 2, etapas_finalizadas: 2 },
+    ],
+    [`POST fincas/${FARM_ID}/procesos`]: () => [201, {}],
+    [`GET fincas/${FARM_ID}/procesos/${PROCESS_ID}/etapas`]: () => [
+      { id: 'e1', nombre: 'Cocinar', dias_estimados: '1', iniciado_en: '2026-09-25', finalizado_en: '2026-09-26' },
+      { id: 'e2', nombre: 'Secar al sol', dias_estimados: '5', iniciado_en: '2026-09-27', finalizado_en: null },
+      { id: 'e3', nombre: 'Empacar', dias_estimados: '0.5', iniciado_en: null, finalizado_en: null },
+    ],
+    [`POST fincas/${FARM_ID}/procesos/${PROCESS_ID}/etapas`]: () => [201, {}],
+    [`POST fincas/${FARM_ID}/etapas/e2/finalizar`]: () => [201, {}],
     'GET glosario': () => [
       { id: 'gl1', termino: 'Jornal', explicacion: 'Día de trabajo de una persona en el campo.', categoria: 'mano_de_obra' },
       { id: 'gl2', termino: 'Soqueo', explicacion: 'Corte del cultivo para que rebrote y se renueve la planta.', categoria: 'renovación' },

@@ -85,3 +85,8 @@
 .progress-slot { min-height: 44px; display: flex; flex-direction: column; justify-content: center; }
 .spread { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .stat-row { display: flex; gap: 12px; }
+
+.paybar { position: sticky; bottom: 0; display: flex; flex-direction: column; gap: 12px; margin: 16px -16px -16px; padding: 16px; background: var(--surface-lowest); border-top: 1px solid var(--outline-variant); }
+@media (min-width: 900px) {
+  .paybar { margin: 16px 0 0; border: 1px solid var(--outline-variant); border-radius: var(--radius-lg); }
+}

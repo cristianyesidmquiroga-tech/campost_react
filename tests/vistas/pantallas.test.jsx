@@ -75,4 +75,27 @@ describe('pantallas', () => {
     await ready('RESUMEN DE HOY')
     expect(backend.calls.filter((c) => c === 'POST fincas/f0000000-0000-4000-8000-000000000001/gastos')).toHaveLength(1)
   })
+
+  it('los formularios de insumos y procesos se abren', async () => {
+    const supply = await renderApp({ role: 'admin', route: '/mas/inventario' })
+    await ready('Fertilizante triple 15')
+    await supply.user.click(screen.getByRole('button', { name: 'Nuevo insumo' }))
+    expect(await screen.findByRole('button', { name: 'Guardar insumo' })).toBeInTheDocument()
+    supply.unmount()
+    const proc = await renderApp({ role: 'admin', route: '/mas/procesos' })
+    await ready('Secado de bijao lote 1')
+    await proc.user.click(screen.getByRole('button', { name: 'Nuevo proceso' }))
+    expect(await screen.findByRole('button', { name: 'Guardar proceso' })).toBeInTheDocument()
+  })
+
+  it('seleccionar un pago habilita el botón y pide confirmación', async () => {
+    const { user } = await renderApp({ role: 'admin', route: '/mas/pagos' })
+    await ready('Pedro Nel Builes')
+    const pay = screen.getByRole('button', { name: 'Marcar como pagado' })
+    expect(pay).toBeDisabled()
+    await user.click(screen.getByRole('checkbox', { name: 'Seleccionar Pedro Nel Builes' }))
+    expect(pay).toBeEnabled()
+    await user.click(pay)
+    expect(await screen.findByText('Se registra un gasto de mano de obra por cada pago.', { exact: false })).toBeInTheDocument()
+  })
 })

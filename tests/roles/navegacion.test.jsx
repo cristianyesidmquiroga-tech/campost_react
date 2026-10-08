@@ -88,4 +88,43 @@ describe('vistas por rol', () => {
     expect(backend.options.consentAccepted).toBe(true)
     await gone('Sus datos')
   })
+
+  it('solo administrador y contador marcan pagos', async () => {
+    for (const [role, canPay] of [['admin', true], ['agricultor', false], ['contador', true]]) {
+      const { unmount } = await renderApp({ role, route: '/mas/pagos' })
+      await ready('Pedro Nel Builes')
+      if (canPay) expect(screen.getByRole('button', { name: 'Marcar como pagado' })).toBeInTheDocument()
+      else expect(screen.queryByRole('button', { name: 'Marcar como pagado' })).not.toBeInTheDocument()
+      unmount()
+    }
+  })
+
+  it('solo administrador y agricultor crean insumos y procesos', async () => {
+    for (const [role, can] of [['admin', true], ['agricultor', true], ['contador', false]]) {
+      const inv = await renderApp({ role, route: '/mas/inventario' })
+      await ready('Fertilizante triple 15')
+      expect(!!screen.queryByRole('button', { name: 'Nuevo insumo' })).toBe(can)
+      inv.unmount()
+      const proc = await renderApp({ role, route: '/mas/procesos' })
+      await ready('Secado de bijao lote 1')
+      expect(!!screen.queryByRole('button', { name: 'Nuevo proceso' })).toBe(can)
+      proc.unmount()
+    }
+  })
+
+  it('el experto no entra a pagos, inventario ni procesos', async () => {
+    for (const route of ['/mas/pagos', '/mas/inventario', '/mas/procesos']) {
+      const { unmount } = await renderApp({ role: 'experto', route })
+      await ready('RESUMEN DE HOY')
+      unmount()
+    }
+  })
+
+  it('el menú Más muestra los accesos según el rol', async () => {
+    const { user } = await renderApp({ role: 'contador', route: '/mas' })
+    await ready('OPERACIÓN DE CAMPO')
+    expect(screen.getByText('Pagos pendientes')).toBeInTheDocument()
+    expect(screen.getByText('Insumos e inventario')).toBeInTheDocument()
+    expect(user).toBeTruthy()
+  })
 })

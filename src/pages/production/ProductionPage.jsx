@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { BookOpen, LineChart, Sprout } from 'lucide-react'
+import { BookOpen, Cog, LineChart, Sprout } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { useApp } from '../../context/AppContext'
 import { useAuth } from '../../context/AuthContext'
@@ -73,11 +73,12 @@ export function ProductionPage() {
   return (
     <Page>
       <InPageFarm />
-      <div className="spread">
+      <div className="spread" style={{ flexWrap: 'wrap' }}>
         <h1 className="headline-md">Producción</h1>
-        {access.managesCatalog && (
-          <Link to="/produccion/cultivos" className="btn btn--text"><BookOpen size={18} aria-hidden /> Catálogo</Link>
-        )}
+        <div className="row gap-4" style={{ flexWrap: 'wrap' }}>
+          {access.seesProcesses && <Link to="/mas/procesos" className="btn btn--text"><Cog size={18} aria-hidden /> Procesos</Link>}
+          {access.managesCatalog && <Link to="/produccion/cultivos" className="btn btn--text"><BookOpen size={18} aria-hidden /> Catálogo</Link>}
+        </div>
       </div>
       <Gap size="sm" />
       <Loadable state={state} skeleton={<SkeletonList height={168} />}>

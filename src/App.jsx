@@ -28,6 +28,11 @@ import { EventDetailPage } from './pages/risks/EventDetailPage'
 import { NewsPage } from './pages/content/NewsPage'
 import { GlossaryPage } from './pages/content/GlossaryPage'
 import { KnowledgePage, KnowledgeDetailPage } from './pages/content/KnowledgePage'
+import { PaymentsPage } from './pages/payments/PaymentsPage'
+import { InventoryPage } from './pages/inventory/InventoryPage'
+import { SupplyDetailPage } from './pages/inventory/SupplyDetailPage'
+import { ProcessesPage } from './pages/processes/ProcessesPage'
+import { ProcessDetailPage } from './pages/processes/ProcessDetailPage'
 import { AccountPage } from './pages/account/AccountPage'
 
 function Guarded({ allowed, children }) {
@@ -66,6 +71,11 @@ function Authenticated() {
           <Route path="mas/fincas/:farmId/lotes/:lotId" element={<Guarded allowed={access.seesProduction}><LotDetailPage /></Guarded>} />
           <Route path="mas/trabajadores" element={<Guarded allowed={access.seesWorkers}><WorkersPage /></Guarded>} />
           <Route path="mas/trabajadores/:id" element={<Guarded allowed={access.seesWorkers}><WorkerDetailPage /></Guarded>} />
+          <Route path="mas/pagos" element={<Guarded allowed={access.seesPayments}><PaymentsPage /></Guarded>} />
+          <Route path="mas/inventario" element={<Guarded allowed={access.seesInventory}><InventoryPage /></Guarded>} />
+          <Route path="mas/insumos/:id" element={<Guarded allowed={access.seesInventory}><SupplyDetailPage /></Guarded>} />
+          <Route path="mas/procesos" element={<Guarded allowed={access.seesProcesses}><ProcessesPage /></Guarded>} />
+          <Route path="mas/procesos/:id" element={<Guarded allowed={access.seesProcesses}><ProcessDetailPage /></Guarded>} />
           <Route path="mas/eventos" element={<Guarded allowed={access.seesRisks}><EventsPage /></Guarded>} />
           <Route path="mas/eventos/:id" element={<Guarded allowed={access.seesRisks}><EventDetailPage /></Guarded>} />
           <Route path="mas/novedades" element={<NewsPage />} />

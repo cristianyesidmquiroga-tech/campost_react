@@ -1,10 +1,13 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { CROP_ID, CYCLE_ID, FARM_ID, PLANTING_ID, createFakeBackend } from '../../src/dev/fakeApi'
+import { CROP_ID, CYCLE_ID, FARM_ID, PLANTING_ID, PROCESS_ID, SUPPLY_ID, createFakeBackend } from '../../src/dev/fakeApi'
 import { setToken } from '../../src/services/http'
 import { listLots } from '../../src/services/farms'
 import { homeOverview } from '../../src/services/home'
 import { cashFlow, expensesByCategory, listMovements } from '../../src/services/money'
 import { cropDetail, plantingOverview } from '../../src/services/production'
+import { listSupplies, supplyMovements } from '../../src/services/inventory'
+import { listJornales, payJornal } from '../../src/services/payments'
+import { addStage, listProcesses, listStages, moveStage } from '../../src/services/processes'
 import { listWorkers, registerWork } from '../../src/services/workers'
 
 let backend
@@ -68,5 +71,42 @@ describe('servicios', () => {
   it('registrar una labor crea la actividad y luego el jornal', async () => {
     await registerWork(FARM_ID, { cycleId: CYCLE_ID, name: 'Socola', phase: 'preparacion', date: '2026-10-07', workedArea: 1, workers: 12, days: 3, dailyValue: 60000 })
     expect(backend.calls.filter((c) => c.startsWith('POST'))).toEqual([`POST fincas/${FARM_ID}/actividades`, `POST fincas/${FARM_ID}/jornales`])
+  })
+
+  it('los jornales pendientes traen beneficiario, labor y total', async () => {
+    const list = await listJornales(FARM_ID, 'pendiente')
+    expect(list).toHaveLength(3)
+    expect(list[0]).toMatchObject({ payee: 'Pedro Nel Builes', total: 270000, workDays: 3, paid: false })
+    expect(list[2].payee).toBe('Cuadrilla sin nombre')
+    expect(list[2].workDays).toBe(4)
+  })
+
+  it('pagar un jornal llama al endpoint de pago', async () => {
+    await payJornal(FARM_ID, 'j1')
+    expect(backend.calls).toContain(`POST fincas/${FARM_ID}/jornales/j1/pagar`)
+  })
+
+  it('los insumos traen existencia, costo promedio y kardex', async () => {
+    const supplies = await listSupplies(FARM_ID)
+    expect(supplies[0]).toMatchObject({ stock: 12, averageCost: 150000, value: 1800000 })
+    expect(supplies[1].averageCost).toBeNull()
+    const moves = await supplyMovements(FARM_ID, SUPPLY_ID)
+    expect(moves.map((m) => m.isEntry)).toEqual([true, false])
+  })
+
+  it('los procesos calculan el avance y las etapas su estado', async () => {
+    const processes = await listProcesses(FARM_ID)
+    expect(processes[0].progress).toBeCloseTo(1 / 3)
+    expect(processes[0].finished).toBe(false)
+    expect(processes[1].finished).toBe(true)
+    const stages = await listStages(FARM_ID, PROCESS_ID)
+    expect(stages.map((s) => [s.done, s.running])).toEqual([[true, false], [false, true], [false, false]])
+  })
+
+  it('agregar y mover etapas llama a los endpoints', async () => {
+    await addStage(FARM_ID, PROCESS_ID, { name: 'Empacar', days: 1 })
+    await moveStage(FARM_ID, 'e2', 'finalizar')
+    expect(backend.calls).toContain(`POST fincas/${FARM_ID}/procesos/${PROCESS_ID}/etapas`)
+    expect(backend.calls).toContain(`POST fincas/${FARM_ID}/etapas/e2/finalizar`)
   })
 })

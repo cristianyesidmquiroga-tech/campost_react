@@ -43,4 +43,15 @@ describe('acceso por rol', () => {
     expect(access.seesProduction).toBe(false)
     expect(access.seesRisks).toBe(false)
   })
+
+  it('pagos, inventario y procesos salen de los permisos', () => {
+    const reads = [['GET', '/fincas/{finca_id}/jornales'], ['GET', '/fincas/{finca_id}/insumos'], ['GET', '/fincas/{finca_id}/procesos']]
+    const accountant = createAccess(session('contador', reads))
+    expect(accountant.seesPayments && accountant.seesInventory && accountant.seesProcesses).toBe(true)
+    expect(accountant.paysWorkers).toBe(true)
+    expect(accountant.managesInventory).toBe(false)
+    const expert = createAccess(session('experto'))
+    expect(expert.seesPayments || expert.seesInventory || expert.seesProcesses).toBe(false)
+    expect(createAccess(session('agricultor', reads)).paysWorkers).toBe(false)
+  })
 })

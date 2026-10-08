@@ -79,3 +79,5 @@ textarea.field__control { padding: 14px 16px; min-height: 96px; resize: vertical
   .overlay { align-items: center; }
   .sheet { border-radius: var(--radius-xl); }
 }
+
+.check-box { width: 24px; height: 24px; flex: none; accent-color: var(--primary-container); }

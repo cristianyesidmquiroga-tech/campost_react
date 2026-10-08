@@ -22,5 +22,10 @@ export const SCREENS = [
   ['glosario', '/mas/glosario', 'Soqueo'],
   ['conocimiento', '/mas/conocimiento', 'Manchas amarillas en la hoja'],
   ['ficha de problema', '/mas/conocimiento/p1', 'Hongo favorecido por la humedad.'],
+  ['pagos pendientes', '/mas/pagos', 'Total acumulado por liquidar'],
+  ['inventario', '/mas/inventario', 'Fertilizante triple 15'],
+  ['detalle de insumo', '/mas/insumos/n0000000-0000-4000-8000-000000000001', 'MOVIMIENTOS DE KARDEX'],
+  ['procesos', '/mas/procesos', 'Secado de bijao lote 1'],
+  ['detalle de proceso', '/mas/procesos/p0000000-0000-4000-8000-000000000001', 'Finalizar etapa'],
   ['cuenta', '/mas/cuenta', 'PRIVACIDAD Y HABEAS DATA'],
 ]
