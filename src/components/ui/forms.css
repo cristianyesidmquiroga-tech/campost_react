@@ -1,0 +1,81 @@
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 52px;
+  padding: 0 20px;
+  border: 1.5px solid transparent;
+  border-radius: var(--radius-lg);
+  background: var(--primary-container);
+  color: #fff;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: background 0.15s var(--ease), opacity 0.15s;
+}
+.btn:hover { background: var(--primary); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn--wide { width: 100%; }
+.btn--outline { background: transparent; color: var(--primary-container); border-color: var(--primary-container); }
+.btn--outline:hover { background: var(--surface-low); }
+.btn--danger { background: var(--error); }
+.btn--danger:hover { background: #8f1212; }
+.btn--outline.btn--danger { background: transparent; color: var(--error); border-color: var(--error); }
+.btn--sm { min-height: 48px; padding: 0 16px; }
+.btn--text { background: transparent; color: var(--primary-container); min-height: 48px; padding: 0 12px; border: 0; }
+.btn--text:hover { background: var(--surface-low); }
+.btn--icon { width: 48px; height: 48px; padding: 0; background: transparent; color: var(--on-surface); border: 0; border-radius: 50%; }
+.btn--icon:hover { background: var(--surface-mid); }
+.btn-stack { display: flex; flex-direction: column; gap: 12px; }
+
+.field { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+.field > label,
+.field__label { font-weight: 600; }
+.field__control {
+  width: 100%;
+  min-height: 56px;
+  padding: 0 16px;
+  background: var(--surface-lowest);
+  border: 1px solid var(--outline-variant);
+  border-radius: var(--radius-lg);
+  font-size: 14px;
+}
+textarea.field__control { padding: 14px 16px; min-height: 96px; resize: vertical; }
+.field__control:focus { outline: 2px solid var(--primary-container); outline-offset: 0; border-color: var(--primary-container); }
+.field__control--error { border-color: var(--error); }
+.field__error { color: var(--error); font-size: 12px; }
+.field__wrap { position: relative; display: flex; align-items: center; }
+.field__wrap > svg { position: absolute; left: 16px; color: var(--outline); pointer-events: none; }
+.field__wrap--icon .field__control { padding-left: 48px; }
+.field__wrap .btn--icon { position: absolute; right: 4px; }
+.field__wrap--icon .field__control--trail { padding-right: 56px; }
+.field__prefix { position: absolute; left: 16px; font-family: var(--font-mono); color: var(--outline); pointer-events: none; }
+.field__wrap--prefix .field__control { padding-left: 74px; }
+
+.total-box { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; padding: 14px; border: 1px solid var(--outline-variant); border-radius: var(--radius-lg); background: var(--surface-low); }
+.total-box > :first-child { flex: 1 1 0; min-width: 0; }
+
+.form-error { display: flex; gap: 8px; align-items: flex-start; margin-bottom: 16px; padding: 12px; border-radius: var(--radius-md); background: var(--error-container); color: var(--on-error-container); }
+.form-error svg { flex: none; }
+
+.check { display: flex; gap: 12px; align-items: flex-start; padding: 12px 0; }
+.check input { width: 22px; height: 22px; margin-top: 2px; flex: none; accent-color: var(--primary-container); }
+
+.overlay { position: fixed; inset: 0; z-index: 60; background: rgba(23, 34, 28, 0.4); display: flex; align-items: flex-end; justify-content: center; }
+.sheet {
+  width: 100%;
+  max-width: 560px;
+  max-height: 92dvh;
+  overflow-y: auto;
+  padding: 8px 16px 24px;
+  background: var(--surface-lowest);
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  box-shadow: var(--shadow-3);
+}
+.sheet__handle { width: 32px; height: 4px; margin: 4px auto 16px; border-radius: 4px; background: var(--outline-variant); }
+.dialog { align-self: center; width: min(92vw, 420px); padding: 24px; border-radius: var(--radius-xl); background: var(--surface-lowest); box-shadow: var(--shadow-3); }
+.dialog__actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px; }
+@media (min-width: 640px) {
+  .overlay { align-items: center; }
+  .sheet { border-radius: var(--radius-xl); }
+}

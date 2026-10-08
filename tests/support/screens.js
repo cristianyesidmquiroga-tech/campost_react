@@ -1,0 +1,26 @@
+const PLANTING = '/produccion/siembras/s0000000-0000-4000-8000-000000000001'
+
+export const SCREENS = [
+  ['inicio', '/inicio', 'RESUMEN DE HOY'],
+  ['producción', '/produccion', 'BALANCE OPERATIVO ACTUAL'],
+  ['detalle de siembra', PLANTING, 'ÍNDICES POR PLANTA'],
+  ['detalle de ciclo', `${PLANTING}/ciclos/y0000000-0000-4000-8000-000000000001`, 'LABORES DEL CICLO'],
+  ['catálogo', '/produccion/cultivos', 'Plátano Dominico Hartón de la región'],
+  ['ficha de cultivo', '/produccion/cultivos/c0000000-0000-4000-8000-000000000001', 'Coffea arabica'],
+  ['dinero', '/dinero', 'DISTRIBUCIÓN DEL GASTO'],
+  ['movimientos', '/dinero/movimientos', 'Total de gastos'],
+  ['detalle de movimiento', '/dinero/movimientos/g1000000-0000-4000-8000-000000000001', 'TRAZABILIDAD'],
+  ['más', '/mas', 'OPERACIÓN DE CAMPO'],
+  ['fincas', '/mas/fincas', 'Área registrada'],
+  ['detalle de finca', '/mas/fincas/f0000000-0000-4000-8000-000000000001', 'LOTES REGISTRADOS'],
+  ['detalle de lote', '/mas/fincas/f0000000-0000-4000-8000-000000000001/lotes/l0000000-0000-4000-8000-000000000001', 'SIEMBRA ACTIVA'],
+  ['trabajadores', '/mas/trabajadores', 'Juan Camilo Henao Zuluaga de los Ríos'],
+  ['detalle de trabajador', '/mas/trabajadores/w1', 'Ficha laboral'],
+  ['eventos', '/mas/eventos', 'Eventos registrados'],
+  ['detalle de evento', '/mas/eventos/e0000000-0000-4000-8000-000000000001', 'DETALLE'],
+  ['novedades', '/mas/novedades', 'Alerta de lluvias en su región'],
+  ['glosario', '/mas/glosario', 'Soqueo'],
+  ['conocimiento', '/mas/conocimiento', 'Manchas amarillas en la hoja'],
+  ['ficha de problema', '/mas/conocimiento/p1', 'Hongo favorecido por la humedad.'],
+  ['cuenta', '/mas/cuenta', 'PRIVACIDAD Y HABEAS DATA'],
+]

@@ -1,0 +1,66 @@
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  max-width: 100%;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  line-height: 14px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  background: var(--surface-high);
+  color: var(--on-surface-variant);
+}
+.pill > span { overflow: hidden; text-overflow: ellipsis; }
+.pill svg { flex: none; }
+.pill--ok { background: var(--secondary-container); color: var(--primary); }
+.pill--warn { background: var(--tertiary-fixed); color: var(--tertiary); }
+.pill--danger { background: var(--error-container); color: var(--on-error-container); }
+.pill--info { background: var(--info-container); color: var(--info); }
+
+.filter-bar { display: flex; gap: 8px; overflow-x: auto; padding: 2px 0; scrollbar-width: none; }
+.filter-bar::-webkit-scrollbar { display: none; }
+.chip {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 0 16px;
+  border-radius: 999px;
+  border: 1px solid var(--outline-variant);
+  background: var(--surface-lowest);
+  color: var(--outline);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.chip--active { background: var(--primary-container); border-color: transparent; color: #fff; }
+.chip__count { padding: 2px 7px; border-radius: 999px; background: var(--surface-high); color: var(--on-surface-variant); font-family: var(--font-mono); font-size: 12px; }
+.chip--active .chip__count { background: var(--primary); color: #fff; }
+
+.segmented { display: flex; gap: 4px; padding: 4px; border-radius: var(--radius-lg); background: var(--surface-mid); }
+.segmented__item {
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 4px;
+  border: 0;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--outline);
+  font-weight: 600;
+}
+.segmented__item > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.segmented__item--active { background: var(--surface-lowest); color: var(--primary-container); }
+
+@media (max-width: 360px) {
+  .segmented { gap: 2px; padding: 3px; }
+  .segmented__item { padding: 0 2px; font-size: 13px; }
+}

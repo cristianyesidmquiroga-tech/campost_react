@@ -1,0 +1,90 @@
+name: Pruebas
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  calidad:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run build
+
+  modulos:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npx vitest run tests/modulos
+
+  roles:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npx vitest run tests/roles
+
+  vistas:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npx vitest run tests/vistas
+
+  diseno:
+    runs-on: ubuntu-latest
+    needs: [calidad]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run build:fake
+      - run: |
+          npx vite preview --outDir build/fake --port 3000 &
+          for i in $(seq 1 30); do curl -sf http://localhost:3000/inicio > /dev/null && break; sleep 1; done
+          CHROME_PATH=$(which google-chrome) node tool/capturar.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: capturas
+          path: build/capturas
+
+  paquete:
+    runs-on: ubuntu-latest
+    needs: [calidad, modulos, roles, vistas, diseno]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+        env:
+          VITE_API_URL: ${{ vars.API_BASE_URL }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: campost-react
+          path: dist
