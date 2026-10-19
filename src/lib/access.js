@@ -29,6 +29,7 @@ export function createAccess(session) {
     seesProduction: has('GET', '/siembras'),
     managesProduction: has('POST', '/siembras'),
     managesCatalog: has('GET', '/cultivos'),
+    createsUsers: has('POST', '/usuarios'),
     seesAssistant: isAdmin || isFarmer,
     seesAssistantQuality: isAdmin,
     seesLivestock: isAdmin || isFarmer,
