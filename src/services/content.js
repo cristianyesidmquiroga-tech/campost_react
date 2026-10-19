@@ -27,6 +27,9 @@ export const listKnowledge = async () =>
     state: k.estado ?? '',
   }))
 
+export const changeKnowledgeState = (id, state, note) =>
+  api.patch(`conocimiento/${id}/estado`, { estado: state, ...(note ? { observacion: note } : {}) })
+
 export async function knowledgeDetail(id) {
   const j = await api.get(`conocimiento/${id}`)
   const texts = (list) => (list ?? []).map((s) => s.descripcion).filter(Boolean)

@@ -265,4 +265,17 @@ describe('vistas por rol', () => {
     await user.click(screen.getByRole('button', { name: 'Crear usuario' }))
     expect(await screen.findByText('nuevo@demo.com')).toBeInTheDocument()
   })
+
+  it('el experto y el administrador revisan fichas; el agricultor no', async () => {
+    for (const role of ['experto', 'admin']) {
+      const { user, unmount } = await renderApp({ role, route: '/mas/conocimiento/revision' })
+      await ready('Hojas con agujeros')
+      await user.click(screen.getByRole('button', { name: 'Validar ficha' }))
+      expect(await screen.findByRole('button', { name: 'Confirmar cambio' })).toBeInTheDocument()
+      unmount()
+    }
+    await renderApp({ role: 'agricultor', route: '/mas/conocimiento/revision' })
+    await ready('RESUMEN DE HOY')
+    expect(screen.queryByText('Hojas con agujeros')).not.toBeInTheDocument()
+  })
 })

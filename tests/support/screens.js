@@ -33,6 +33,7 @@ export const SCREENS = [
   ['visor de tiempos', '/mas/reportes/cronograma', 'Fin planeado'],
   ['visor de eventos', '/mas/reportes/eventos', 'Por severidad'],
   ['novedades', '/mas/novedades', 'Alerta de lluvias en su región'],
+  ['revisión de conocimiento', '/mas/conocimiento/revision', 'Hojas con agujeros'],
   ['glosario', '/mas/glosario', 'Soqueo'],
   ['conocimiento', '/mas/conocimiento', 'Manchas amarillas en la hoja'],
   ['ficha de problema', '/mas/conocimiento/p1', 'Hongo favorecido por la humedad.'],

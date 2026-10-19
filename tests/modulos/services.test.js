@@ -12,6 +12,7 @@ import { askAssistant, assistantQuality, getConsultation, listConsultations } fr
 import { listAnimalEvents, listAnimals, listFeeding, listLots as listAnimalLots, listProduction, listSpecies } from '../../src/services/livestock'
 import { cancelActivity, listActivities, updateActivity } from '../../src/services/activities'
 import { createUser, USER_ROLES } from '../../src/services/users'
+import { changeKnowledgeState } from '../../src/services/content'
 import { changePassword } from '../../src/services/auth'
 import { listBatches } from '../../src/services/nursery'
 import { eventsReport, indicesReport, listReports, scheduleReport } from '../../src/services/reports'
@@ -182,5 +183,10 @@ describe('servicios', () => {
     expect(USER_ROLES.map(([key]) => key)).toEqual(['agricultor', 'contador', 'experto', 'admin'])
     const user = await createUser({ email: 'nuevo@demo.com', name: 'Persona Nueva', password: 'clave-segura-1', role: 'contador' })
     expect(user).toMatchObject({ email: 'nuevo@demo.com', role: 'contador', active: true })
+  })
+
+  it('el cambio de estado de una ficha envía el estado y la observación', async () => {
+    await changeKnowledgeState('p2', 'validado', 'Revisada con la fuente')
+    expect(backend.calls).toContain('PATCH conocimiento/p2/estado')
   })
 })
