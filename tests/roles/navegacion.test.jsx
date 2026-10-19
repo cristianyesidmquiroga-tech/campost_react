@@ -278,4 +278,27 @@ describe('vistas por rol', () => {
     await ready('RESUMEN DE HOY')
     expect(screen.queryByText('Hojas con agujeros')).not.toBeInTheDocument()
   })
+
+  it('solo el administrador gestiona fuentes y alertas', async () => {
+    const admin = await renderApp({ role: 'admin', route: '/mas/alertas' })
+    expect(await screen.findByRole('button', { name: 'Registrar fuente' })).toBeInTheDocument()
+    admin.unmount()
+    for (const role of ['agricultor', 'contador', 'experto']) {
+      const { unmount } = await renderApp({ role, route: '/mas/alertas' })
+      await ready('RESUMEN DE HOY')
+      expect(screen.queryByRole('button', { name: 'Registrar fuente' })).not.toBeInTheDocument()
+      unmount()
+    }
+  })
+
+  it('el administrador valida, registra y sincroniza una fuente', async () => {
+    const { user } = await renderApp({ role: 'admin', route: '/mas/alertas' })
+    await user.click(await screen.findByRole('button', { name: 'Registrar fuente' }))
+    expect(await screen.findByText('Escriba el nombre de la fuente.')).toBeInTheDocument()
+    await user.type(screen.getByLabelText('Nombre de la fuente'), 'IDEAM')
+    await user.type(screen.getByLabelText('Dirección de la fuente'), 'https://ideam.gov.co/alertas')
+    await user.click(screen.getByRole('button', { name: 'Registrar fuente' }))
+    await user.click(await screen.findByRole('button', { name: 'Sincronizar' }))
+    expect(await screen.findByText('1 alertas encontradas en IDEAM.')).toBeInTheDocument()
+  })
 })
