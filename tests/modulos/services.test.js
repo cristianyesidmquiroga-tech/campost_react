@@ -8,6 +8,7 @@ import { cropDetail, plantingOverview } from '../../src/services/production'
 import { listSupplies, supplyMovements } from '../../src/services/inventory'
 import { listJornales, payJornal } from '../../src/services/payments'
 import { addStage, listProcesses, listStages, moveStage } from '../../src/services/processes'
+import { listBatches } from '../../src/services/nursery'
 import { eventsReport, indicesReport, listReports, scheduleReport } from '../../src/services/reports'
 import { listWorkers, registerWork } from '../../src/services/workers'
 
@@ -124,5 +125,12 @@ describe('servicios', () => {
     const events = await eventsReport(FARM_ID)
     expect(events.loss).toBe(1850000)
     expect(events.bySeverity).toEqual([['moderada', 1]])
+  })
+
+  it('los lotes de vivero traen su avance', async () => {
+    const batches = await listBatches(FARM_ID)
+    expect(batches).toHaveLength(1)
+    expect(batches[0].ready - batches[0].transplanted).toBe(200)
+    expect(await listBatches('otra-finca')).toHaveLength(0)
   })
 })

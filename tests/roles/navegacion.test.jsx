@@ -141,4 +141,23 @@ describe('vistas por rol', () => {
     await ready('OPERACIÓN DE CAMPO')
     expect(screen.getByText('Índices, tiempos y eventos')).toBeInTheDocument()
   })
+
+  it('el contador no entra al vivero', async () => {
+    await renderApp({ role: 'contador', route: '/mas/vivero' })
+    await ready('RESUMEN DE HOY')
+    expect(screen.queryByText('Actualizar avance')).not.toBeInTheDocument()
+  })
+
+  it('el agricultor abre las tres hojas del vivero', async () => {
+    const { user } = await renderApp({ role: 'agricultor', route: '/mas/vivero' })
+    await ready('Actualizar avance')
+    await user.click(screen.getByRole('button', { name: 'Actualizar avance' }))
+    expect(await screen.findByRole('button', { name: 'Guardar avance' })).toBeInTheDocument()
+    await user.keyboard('{Escape}')
+    await user.click(screen.getByRole('button', { name: 'Trasplantar' }))
+    expect(await screen.findByRole('button', { name: 'Registrar trasplante' })).toBeInTheDocument()
+    await user.keyboard('{Escape}')
+    await user.click(screen.getByRole('button', { name: /Nuevo lote/ }))
+    expect(await screen.findByRole('button', { name: 'Guardar lote' })).toBeInTheDocument()
+  })
 })

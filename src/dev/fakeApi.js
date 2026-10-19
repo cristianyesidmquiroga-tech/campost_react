@@ -9,13 +9,14 @@ export const RISK_ID = 'r0000000-0000-4000-8000-000000000001'
 export const EVENT_ID = 'e0000000-0000-4000-8000-000000000001'
 export const PROCESS_ID = 'p0000000-0000-4000-8000-000000000001'
 export const SUPPLY_ID = 'n0000000-0000-4000-8000-000000000001'
+export const BATCH_ID = 'v0000000-0000-4000-8000-000000000001'
 export const ROLES = ['admin', 'agricultor', 'contador', 'experto']
 
 const perm = (metodo, ruta) => ({ grupo: 'x', metodo, ruta, resumen: 'x' })
 const READS = [perm('GET', '/fincas/{finca_id}/jornales'), perm('GET', '/fincas/{finca_id}/insumos'), perm('GET', '/fincas/{finca_id}/procesos')]
 const PERMISSIONS = {
-  admin: [...READS, perm('GET', '/siembras'), perm('POST', '/siembras'), perm('GET', '/cultivos'), perm('GET', '/eventos-adversos'), perm('POST', '/usuarios')],
-  agricultor: [...READS, perm('GET', '/siembras'), perm('POST', '/siembras'), perm('GET', '/cultivos'), perm('GET', '/eventos-adversos')],
+  admin: [...READS, perm('GET', '/siembras'), perm('POST', '/siembras'), perm('GET', '/cultivos'), perm('GET', '/eventos-adversos'), perm('POST', '/usuarios'), perm('GET', '/propagacion')],
+  agricultor: [...READS, perm('GET', '/siembras'), perm('POST', '/siembras'), perm('GET', '/cultivos'), perm('GET', '/eventos-adversos'), perm('GET', '/propagacion')],
   contador: [...READS, perm('GET', '/siembras')],
   experto: [],
 }
@@ -147,6 +148,10 @@ function routes(opts) {
     'GET reportes/indices': () => ({ siembras: [{ siembra_id: PLANTING_ID, cultivo: 'Café', lote_id: LOT_ID, fecha_conteo: '2026-10-02', indicadores: [{ titulo: 'Plantas por hectárea', valor: 3800, unidad: 'plantas por hectárea' }], aviso: null }] }),
     'GET reportes/cronograma': () => ({ ciclos: [{ siembra_id: PLANTING_ID, ciclo_id: CYCLE_ID, cultivo: 'Café', tipo: 'levante', fecha_inicio: '2026-08-01', fase_actual: 'siembra', fases_planeadas: 3, fecha_fin_planeada: '2027-01-13', aviso: null }] }),
     'GET reportes/eventos': () => ({ desde: null, hasta: null, total: 1, perdida_estimada_total: '1850000.00', por_tipo: [{ tipo: 'clima', cantidad: 1, perdida_estimada: '1850000.00', perdida_promedio_pct: 12 }], por_severidad: { moderada: 1 }, aviso: null }),
+    'GET propagacion': () => page([{ id: BATCH_ID, finca_id: FARM_ID, cultivo_id: CROP_ID, siembra_id: null, metodo: 'semilla', fecha_inicio: '2026-09-01', puestas: 500, germinadas: 420, listas: 300, perdidas: 80, trasplantadas: 100 }]),
+    'POST propagacion': () => [201, {}],
+    [`PATCH propagacion/${BATCH_ID}`]: () => ({}),
+    [`POST propagacion/${BATCH_ID}/trasplante`]: () => [201, {}],
     'GET glosario': () => [
       { id: 'gl1', termino: 'Jornal', explicacion: 'Día de trabajo de una persona en el campo.', categoria: 'mano_de_obra' },
       { id: 'gl2', termino: 'Soqueo', explicacion: 'Corte del cultivo para que rebrote y se renueve la planta.', categoria: 'renovación' },

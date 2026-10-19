@@ -18,6 +18,7 @@ export const SCREENS = [
   ['detalle de trabajador', '/mas/trabajadores/w1', 'Ficha laboral'],
   ['eventos', '/mas/eventos', 'Eventos registrados'],
   ['detalle de evento', '/mas/eventos/e0000000-0000-4000-8000-000000000001', 'DETALLE'],
+  ['vivero', '/mas/vivero', 'Actualizar avance'],
   ['reportes', '/mas/reportes', 'Tiempos del ciclo'],
   ['visor de índices', '/mas/reportes/indices', 'Plantas por hectárea'],
   ['visor de tiempos', '/mas/reportes/cronograma', 'Fin planeado'],
