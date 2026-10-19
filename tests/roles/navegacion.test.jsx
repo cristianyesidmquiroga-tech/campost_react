@@ -241,4 +241,28 @@ describe('vistas por rol', () => {
     await ready('Socola y limpieza selectiva del lote')
     expect(screen.queryByRole('button', { name: 'Editar labor' })).not.toBeInTheDocument()
   })
+
+  it('solo el administrador crea usuarios', async () => {
+    const admin = await renderApp({ role: 'admin', route: '/mas/usuarios' })
+    expect(await screen.findByRole('button', { name: 'Crear usuario' })).toBeInTheDocument()
+    admin.unmount()
+    for (const role of ['agricultor', 'contador', 'experto']) {
+      const { unmount } = await renderApp({ role, route: '/mas/usuarios' })
+      await ready('RESUMEN DE HOY')
+      expect(screen.queryByRole('button', { name: 'Crear usuario' })).not.toBeInTheDocument()
+      unmount()
+    }
+  })
+
+  it('el administrador valida y crea un usuario', async () => {
+    const { user } = await renderApp({ role: 'admin', route: '/mas/usuarios' })
+    await user.click(await screen.findByRole('button', { name: 'Crear usuario' }))
+    expect(await screen.findByText('Escriba el nombre completo.')).toBeInTheDocument()
+    expect(screen.getByText('Escriba un correo válido.')).toBeInTheDocument()
+    await user.type(screen.getByLabelText('Nombre completo'), 'Persona Nueva')
+    await user.type(screen.getByLabelText('Correo'), 'nuevo@demo.com')
+    await user.type(screen.getByLabelText('Contraseña inicial'), 'clave-segura-1')
+    await user.click(screen.getByRole('button', { name: 'Crear usuario' }))
+    expect(await screen.findByText('nuevo@demo.com')).toBeInTheDocument()
+  })
 })

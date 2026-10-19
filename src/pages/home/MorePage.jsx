@@ -1,4 +1,4 @@
-import { BarChart3, Beef, MessageCircleQuestion, BookOpen, Bell, Boxes, Cog, GraduationCap, Leaf, HandCoins, LogOut, Map as MapIcon, Shield, Sprout, TriangleAlert, Users } from 'lucide-react'
+import { BarChart3, Beef, UserCog, MessageCircleQuestion, BookOpen, Bell, Boxes, Cog, GraduationCap, Leaf, HandCoins, LogOut, Map as MapIcon, Shield, Sprout, TriangleAlert, Users } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
 import { useConfirm } from '../../hooks/useConfirm'
 import { Button, Card, ListRow, RowGroup, SectionTitle, StatusPill } from '../../components/ui'
@@ -49,6 +49,7 @@ export function MorePage() {
       </RowGroup>
       <SectionTitle>Cuenta y privacidad</SectionTitle>
       <RowGroup>
+        {access.createsUsers && <ListRow to="/mas/usuarios" icon={UserCog} title="Usuarios y roles" subtitle="Crear cuentas y asignar perfil" />}
         <ListRow to="/mas/cuenta" icon={Shield} title="Mi cuenta" subtitle="Datos, privacidad y autorización" />
       </RowGroup>
       <Gap size="lg" />

@@ -41,5 +41,6 @@ export const SCREENS = [
   ['detalle de insumo', '/mas/insumos/n0000000-0000-4000-8000-000000000001', 'MOVIMIENTOS DE KARDEX'],
   ['procesos', '/mas/procesos', 'Secado de bijao lote 1'],
   ['detalle de proceso', '/mas/procesos/p0000000-0000-4000-8000-000000000001', 'Finalizar etapa'],
+  ['usuarios y roles', '/mas/usuarios', 'Creados en esta sesión'],
   ['cuenta', '/mas/cuenta', 'PRIVACIDAD Y HABEAS DATA'],
 ]

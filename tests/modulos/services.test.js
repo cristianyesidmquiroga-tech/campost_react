@@ -11,6 +11,7 @@ import { addStage, listProcesses, listStages, moveStage } from '../../src/servic
 import { askAssistant, assistantQuality, getConsultation, listConsultations } from '../../src/services/assistant'
 import { listAnimalEvents, listAnimals, listFeeding, listLots as listAnimalLots, listProduction, listSpecies } from '../../src/services/livestock'
 import { cancelActivity, listActivities, updateActivity } from '../../src/services/activities'
+import { createUser, USER_ROLES } from '../../src/services/users'
 import { changePassword } from '../../src/services/auth'
 import { listBatches } from '../../src/services/nursery'
 import { eventsReport, indicesReport, listReports, scheduleReport } from '../../src/services/reports'
@@ -175,5 +176,11 @@ describe('servicios', () => {
     await cancelActivity(FARM_ID, 'act-1')
     expect(backend.calls).toContain('PATCH fincas/' + FARM_ID + '/actividades/act-1')
     expect(backend.calls).toContain('DELETE fincas/' + FARM_ID + '/actividades/act-1')
+  })
+
+  it('un usuario nuevo se crea con su perfil', async () => {
+    expect(USER_ROLES.map(([key]) => key)).toEqual(['agricultor', 'contador', 'experto', 'admin'])
+    const user = await createUser({ email: 'nuevo@demo.com', name: 'Persona Nueva', password: 'clave-segura-1', role: 'contador' })
+    expect(user).toMatchObject({ email: 'nuevo@demo.com', role: 'contador', active: true })
   })
 })

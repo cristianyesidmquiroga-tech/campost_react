@@ -196,6 +196,7 @@ function routes(opts) {
     [`POST consultas/${CONSULTATION_ID}/retroalimentacion`]: () => [201, {}],
     'GET asistente/calidad': () => ({ consultas: 10, con_valoracion: 6, sirvieron: 4, no_sirvieron: 1, equivocadas: 1, porcentaje_que_sirvio: 66.7, aviso: null }),
     'POST cuenta/cambiar-clave': () => [200, {}],
+    'POST usuarios': () => [201, { id: 'u-nuevo', email: 'nuevo@demo.com', nombre: 'Persona Nueva', rol: 'contador', activo: true }],
     'GET glosario': () => [
       { id: 'gl1', termino: 'Jornal', explicacion: 'Día de trabajo de una persona en el campo.', categoria: 'mano_de_obra' },
       { id: 'gl2', termino: 'Soqueo', explicacion: 'Corte del cultivo para que rebrote y se renueve la planta.', categoria: 'renovación' },
