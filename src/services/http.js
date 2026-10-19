@@ -82,6 +82,7 @@ export const api = {
   post: (path, body, options = {}) => request('POST', path, { body: body ?? {}, ...options }),
   patch: (path, body) => request('PATCH', path, { body }),
   put: (path, body) => request('PUT', path, { body }),
+  delete: (path) => request('DELETE', path),
   public: (path) => request('GET', path, { auth: false }),
   login: (body) => request('POST', 'auth/login', { body, auth: false }),
 

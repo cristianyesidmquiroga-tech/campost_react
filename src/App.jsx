@@ -25,6 +25,7 @@ import { WorkersPage } from './pages/workers/WorkersPage'
 import { WorkerDetailPage } from './pages/workers/WorkerDetailPage'
 import { EventsPage } from './pages/risks/EventsPage'
 import { EventDetailPage } from './pages/risks/EventDetailPage'
+import { ActivityDetailPage } from './pages/production/ActivityDetailPage'
 import { AssistantPage } from './pages/assistant/AssistantPage'
 import { AssistantQualityPage, ConsultationDetailPage, ConsultationHistoryPage } from './pages/assistant/ConsultationPages'
 import { AnimalDetailPage, AnimalLotDetailPage, SpeciesDetailPage } from './pages/livestock/LivestockDetailPages'
@@ -67,6 +68,7 @@ function Authenticated() {
           <Route path="produccion" element={<Guarded allowed={access.seesProduction}><ProductionPage /></Guarded>} />
           <Route path="produccion/siembras/:id" element={<Guarded allowed={access.seesProduction}><PlantingDetailPage /></Guarded>} />
           <Route path="produccion/siembras/:id/ciclos/:cycleId" element={<Guarded allowed={access.seesProduction}><CyclePage /></Guarded>} />
+          <Route path="produccion/labores/:id" element={<Guarded allowed={access.seesProduction}><ActivityDetailPage /></Guarded>} />
           <Route path="produccion/cultivos" element={<Guarded allowed={access.managesCatalog}><CropsPage /></Guarded>} />
           <Route path="produccion/cultivos/:id" element={<Guarded allowed={access.managesCatalog}><CropDetailPage /></Guarded>} />
           <Route path="dinero" element={<Guarded allowed={access.seesMoney}><MoneyPage /></Guarded>} />

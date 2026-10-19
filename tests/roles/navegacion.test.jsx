@@ -229,4 +229,16 @@ describe('vistas por rol', () => {
     expect(await screen.findByText('Debe tener al menos 10 caracteres.')).toBeInTheDocument()
     expect(screen.getByText('Las contraseñas no coinciden.')).toBeInTheDocument()
   })
+
+  it('el agricultor edita y anula una labor; el contador solo la mira', async () => {
+    const farmer = await renderApp({ role: 'agricultor', route: '/produccion/labores/act-1' })
+    await ready('Editar labor')
+    expect(screen.getByRole('button', { name: 'Anular labor' })).toBeInTheDocument()
+    await farmer.user.click(screen.getByRole('button', { name: 'Editar labor' }))
+    expect(await screen.findByRole('button', { name: 'Guardar cambios' })).toBeInTheDocument()
+    farmer.unmount()
+    await renderApp({ role: 'contador', route: '/produccion/labores/act-1' })
+    await ready('Socola y limpieza selectiva del lote')
+    expect(screen.queryByRole('button', { name: 'Editar labor' })).not.toBeInTheDocument()
+  })
 })
