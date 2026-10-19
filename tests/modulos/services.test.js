@@ -13,6 +13,7 @@ import { listAnimalEvents, listAnimals, listFeeding, listLots as listAnimalLots,
 import { cancelActivity, listActivities, updateActivity } from '../../src/services/activities'
 import { createUser, USER_ROLES } from '../../src/services/users'
 import { changeKnowledgeState } from '../../src/services/content'
+import { listAlerts, registerAlertSource, syncAlertSource } from '../../src/services/alerts'
 import { changePassword } from '../../src/services/auth'
 import { listBatches } from '../../src/services/nursery'
 import { eventsReport, indicesReport, listReports, scheduleReport } from '../../src/services/reports'
@@ -188,5 +189,12 @@ describe('servicios', () => {
   it('el cambio de estado de una ficha envía el estado y la observación', async () => {
     await changeKnowledgeState('p2', 'validado', 'Revisada con la fuente')
     expect(backend.calls).toContain('PATCH conocimiento/p2/estado')
+  })
+
+  it('las fuentes de alerta se registran, se sincronizan y las alertas se listan', async () => {
+    const source = await registerAlertSource({ name: 'IDEAM', url: 'https://ideam.gov.co/alertas' })
+    expect(source.id).toBe('fa-1')
+    expect(await syncAlertSource(source.id)).toHaveLength(1)
+    expect((await listAlerts(FARM_ID))[0].title).toMatch(/Lluvias/)
   })
 })

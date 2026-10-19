@@ -25,6 +25,7 @@ import { WorkersPage } from './pages/workers/WorkersPage'
 import { WorkerDetailPage } from './pages/workers/WorkerDetailPage'
 import { EventsPage } from './pages/risks/EventsPage'
 import { EventDetailPage } from './pages/risks/EventDetailPage'
+import { AlertSourcesPage } from './pages/content/AlertSourcesPage'
 import { KnowledgeReviewPage } from './pages/content/KnowledgeReviewPage'
 import { UsersPage } from './pages/account/UsersPage'
 import { ActivityDetailPage } from './pages/production/ActivityDetailPage'
@@ -100,6 +101,7 @@ function Authenticated() {
           <Route path="mas/vivero" element={<Guarded allowed={access.seesNursery}><NurseryPage /></Guarded>} />
           <Route path="mas/reportes" element={<Guarded allowed={access.seesReports}><ReportsPage /></Guarded>} />
           <Route path="mas/reportes/:id" element={<Guarded allowed={access.seesReports}><ReportViewerPage /></Guarded>} />
+          <Route path="mas/alertas" element={<Guarded allowed={access.managesAlerts}><AlertSourcesPage /></Guarded>} />
           <Route path="mas/novedades" element={<NewsPage />} />
           <Route path="mas/glosario" element={<GlossaryPage />} />
           <Route path="mas/conocimiento/revision" element={<Guarded allowed={access.reviewsKnowledge}><KnowledgeReviewPage /></Guarded>} />

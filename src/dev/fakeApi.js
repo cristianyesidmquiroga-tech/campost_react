@@ -197,6 +197,9 @@ function routes(opts) {
     'GET asistente/calidad': () => ({ consultas: 10, con_valoracion: 6, sirvieron: 4, no_sirvieron: 1, equivocadas: 1, porcentaje_que_sirvio: 66.7, aviso: null }),
     'POST cuenta/cambiar-clave': () => [200, {}],
     'POST usuarios': () => [201, { id: 'u-nuevo', email: 'nuevo@demo.com', nombre: 'Persona Nueva', rol: 'contador', activo: true }],
+    [`GET fincas/${FARM_ID}/alertas`]: () => [{ id: 'al-1', finca_id: FARM_ID, fuente_id: 'fa-1', tipo: 'clima', region_dane: '05', titulo: 'Lluvias fuertes en el suroeste', resumen: 'Se esperan lluvias esta semana.', vigente_desde: '2026-10-05T00:00:00', vigente_hasta: '2026-10-12T00:00:00' }],
+    'POST alertas/fuentes': () => [201, { id: 'fa-1', nombre: 'IDEAM', url: 'https://ideam.gov.co/alertas' }],
+    'POST alertas/fuentes/fa-1/sincronizar': () => [{ titulo: 'Lluvias fuertes en el suroeste' }],
     'GET glosario': () => [
       { id: 'gl1', termino: 'Jornal', explicacion: 'Día de trabajo de una persona en el campo.', categoria: 'mano_de_obra' },
       { id: 'gl2', termino: 'Soqueo', explicacion: 'Corte del cultivo para que rebrote y se renueve la planta.', categoria: 'renovación' },
