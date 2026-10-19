@@ -32,7 +32,7 @@ export function newIdempotencyKey() {
 }
 
 function buildUrl(path, query) {
-  const url = new URL(`${BASE}/${path.replace(/^\/+/, '')}`)
+  const url = new URL(`${BASE}/${path.replace(/^\/+/, '')}`, window.location.origin)
   Object.entries(query ?? {}).forEach(([key, value]) => {
     if (value !== undefined && value !== null && value !== '') url.searchParams.set(key, String(value))
   })
