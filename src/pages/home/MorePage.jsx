@@ -1,4 +1,4 @@
-import { BarChart3, Beef, BookOpen, Bell, Boxes, Cog, GraduationCap, Leaf, HandCoins, LogOut, Map as MapIcon, Shield, Sprout, TriangleAlert, Users } from 'lucide-react'
+import { BarChart3, Beef, MessageCircleQuestion, BookOpen, Bell, Boxes, Cog, GraduationCap, Leaf, HandCoins, LogOut, Map as MapIcon, Shield, Sprout, TriangleAlert, Users } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
 import { useConfirm } from '../../hooks/useConfirm'
 import { Button, Card, ListRow, RowGroup, SectionTitle, StatusPill } from '../../components/ui'
@@ -34,6 +34,7 @@ export function MorePage() {
         {access.seesPayments && <ListRow to="/mas/pagos" icon={HandCoins} title="Pagos pendientes" subtitle="Jornales por liquidar" />}
         {access.seesInventory && <ListRow to="/mas/inventario" icon={Boxes} title="Insumos e inventario" subtitle="Existencias, entradas y consumos" />}
         {access.seesProcesses && <ListRow to="/mas/procesos" icon={Cog} title="Procesos de transformación" subtitle="Etapas del secado y beneficio" />}
+        {access.seesAssistant && <ListRow to="/mas/asistente" icon={MessageCircleQuestion} title="Consultar" subtitle="Pregunte sobre su cultivo" />}
         {access.seesLivestock && <ListRow to="/mas/animales" icon={Beef} title="Mis animales" subtitle="Lotes, animales y especies" />}
         {access.seesNursery && <ListRow to="/mas/vivero" icon={Leaf} title="Vivero" subtitle="Lotes de plantas por germinar y trasplantar" />}
         {access.managesCatalog && <ListRow to="/produccion/cultivos" icon={Sprout} title="Catálogo de cultivos" subtitle="Perfiles que gobiernan el ciclo" />}

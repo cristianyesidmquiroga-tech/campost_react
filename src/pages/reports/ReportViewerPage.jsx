@@ -1,5 +1,5 @@
 import { Navigate, useParams } from 'react-router-dom'
-import { BarChart3 } from 'lucide-react'
+import { BarChart3, Info } from 'lucide-react'
 import { useApp } from '../../context/AppContext'
 import { useAsync } from '../../hooks/useAsync'
 import { eventsReport, indicesReport, scheduleReport } from '../../services/reports'
@@ -28,7 +28,7 @@ function Indices({ farmId }) {
                     <InfoRow key={i.title} label={i.title} value={`${formatNumber(i.value, i.value % 1 === 0 ? 0 : 1)} ${i.unit}`} />
                   ))}
                 </InfoList>
-                {p.notice && <Note>{p.notice}</Note>}
+                {p.notice && <Note icon={Info}>{p.notice}</Note>}
               </Card>
             ))}
           </div>
@@ -57,7 +57,7 @@ function Schedule({ farmId }) {
                   <InfoRow label="Fases planeadas" value={formatNumber(c.plannedPhases)} />
                   <InfoRow label="Fin planeado" value={c.plannedEnd ? formatDate(c.plannedEnd) : 'Sin fecha'} />
                 </InfoList>
-                {c.notice && <Note>{c.notice}</Note>}
+                {c.notice && <Note icon={Info}>{c.notice}</Note>}
               </Card>
             ))}
           </div>
@@ -94,7 +94,7 @@ function Events({ farmId }) {
               ))}
             </InfoList>
           </Card>
-          {report.notice && <Note>{report.notice}</Note>}
+          {report.notice && <Note icon={Info}>{report.notice}</Note>}
         </>
       )}
     </Loadable>

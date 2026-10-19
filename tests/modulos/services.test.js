@@ -8,6 +8,7 @@ import { cropDetail, plantingOverview } from '../../src/services/production'
 import { listSupplies, supplyMovements } from '../../src/services/inventory'
 import { listJornales, payJornal } from '../../src/services/payments'
 import { addStage, listProcesses, listStages, moveStage } from '../../src/services/processes'
+import { askAssistant, assistantQuality, getConsultation, listConsultations } from '../../src/services/assistant'
 import { listAnimalEvents, listAnimals, listFeeding, listLots as listAnimalLots, listProduction, listSpecies } from '../../src/services/livestock'
 import { listBatches } from '../../src/services/nursery'
 import { eventsReport, indicesReport, listReports, scheduleReport } from '../../src/services/reports'
@@ -143,5 +144,19 @@ describe('servicios', () => {
     expect((await listAnimalEvents(FARM_ID))[0].animalId).toBe(animals[0].id)
     expect((await listProduction(FARM_ID))[0].unit).toBe('litros')
     expect((await listFeeding(FARM_ID))[0].cost).toBe(180000)
+  })
+
+  it('el asistente responde con causas y tratamientos validados', async () => {
+    const consultation = await askAssistant(PLANTING_ID, 'Manchas amarillas en las hojas nuevas')
+    expect(consultation.answer.causes[0].match).toBe('alta')
+    expect(consultation.answer.treatments[0].product).toBe('Producto registrado ICA')
+    expect((await listConsultations())[0].question).toMatch(/Manchas/)
+    expect((await getConsultation(consultation.id)).answer.hasInfo).toBe(true)
+  })
+
+  it('la calidad del asistente trae el porcentaje que sirvió', async () => {
+    const quality = await assistantQuality()
+    expect(quality.percent).toBeCloseTo(66.7, 1)
+    expect(quality.helpful + quality.notHelpful + quality.wrong).toBe(6)
   })
 })

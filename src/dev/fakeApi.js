@@ -9,6 +9,7 @@ export const RISK_ID = 'r0000000-0000-4000-8000-000000000001'
 export const EVENT_ID = 'e0000000-0000-4000-8000-000000000001'
 export const PROCESS_ID = 'p0000000-0000-4000-8000-000000000001'
 export const SUPPLY_ID = 'n0000000-0000-4000-8000-000000000001'
+export const CONSULTATION_ID = 'q0000000-0000-4000-8000-000000000001'
 export const SPECIES_ID = 'sp000000-0000-4000-8000-000000000001'
 export const ANIMAL_LOT_ID = 'la000000-0000-4000-8000-000000000001'
 export const ANIMAL_ID = 'an000000-0000-4000-8000-000000000001'
@@ -44,6 +45,26 @@ const schedule = {
 }
 
 const gasto = (n, categoria, monto, estado = 'activo') => ({ id: `g1000000-0000-4000-8000-00000000000${n}`, finca_id: FARM_ID, categoria, monto, total: null, estado })
+
+const consultation = () => ({
+  id: CONSULTATION_ID,
+  contexto: 'siembra',
+  contexto_id: PLANTING_ID,
+  creado_en: '2026-10-05T09:00:00',
+  pregunta: 'Manchas amarillas en las hojas nuevas',
+  mensaje_respuesta_id: 'm1',
+  valoracion: null,
+  respuesta: {
+    lo_que_entendi: 'Las hojas nuevas tienen manchas amarillas.',
+    causas_probables: [{ problema_id: 'p1', problema: 'Manchas amarillas en la hoja', coincidencia: 'alta', por_que: 'Coincide con hongo por humedad.', fuentes: ['Fuente ICA'] }],
+    que_hacer: ['Mejore la aireación del lote.'],
+    tratamientos: [{ problema: 'Hongo', producto_ica: 'Producto registrado ICA', descripcion: 'Aplicar según la etiqueta.', fuente: null }],
+    mensaje_tratamiento: '',
+    cuando_llamar_al_tecnico: 'Si avanza en una semana.',
+    aviso: 'Consulte con asistencia técnica.',
+    hay_informacion: true,
+  },
+})
 
 function routes(opts) {
   const { farms } = opts
@@ -167,6 +188,11 @@ function routes(opts) {
     [`POST fincas/${FARM_ID}/produccion-animal`]: () => [201, {}],
     [`GET fincas/${FARM_ID}/alimentacion-animal`]: () => [{ id: 'al1', finca_id: FARM_ID, lote_animal_id: ANIMAL_LOT_ID, alimento: 'Concentrado', cantidad: '60', costo: '180000.00', fecha: '2026-10-01T00:00:00' }],
     [`POST fincas/${FARM_ID}/alimentacion-animal`]: () => [201, {}],
+    'POST consultas': () => [201, consultation()],
+    'GET consultas': () => page([{ id: CONSULTATION_ID, contexto_id: PLANTING_ID, creado_en: '2026-10-05T09:00:00', pregunta: 'Manchas amarillas en las hojas nuevas', valoracion: null }]),
+    [`GET consultas/${CONSULTATION_ID}`]: () => consultation(),
+    [`POST consultas/${CONSULTATION_ID}/retroalimentacion`]: () => [201, {}],
+    'GET asistente/calidad': () => ({ consultas: 10, con_valoracion: 6, sirvieron: 4, no_sirvieron: 1, equivocadas: 1, porcentaje_que_sirvio: 66.7, aviso: null }),
     'GET glosario': () => [
       { id: 'gl1', termino: 'Jornal', explicacion: 'Día de trabajo de una persona en el campo.', categoria: 'mano_de_obra' },
       { id: 'gl2', termino: 'Soqueo', explicacion: 'Corte del cultivo para que rebrote y se renueve la planta.', categoria: 'renovación' },

@@ -1,5 +1,6 @@
 import { screen, within } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
+import { PLANTING_ID } from '../../src/dev/fakeApi'
 import { gone, ready, renderApp } from '../support/harness'
 
 const nav = () => within(screen.getByRole('navigation', { name: 'Principal' }))
@@ -179,5 +180,33 @@ describe('vistas por rol', () => {
       expect(await screen.findByRole('button', { name: button })).toBeInTheDocument()
       await user.keyboard('{Escape}')
     }
+  })
+
+  it('solo el administrador ve la calidad del asistente', async () => {
+    const admin = await renderApp({ role: 'admin', route: '/mas/asistente' })
+    await ready('Historial de consultas')
+    expect(screen.getByText('Calidad del asistente')).toBeInTheDocument()
+    admin.unmount()
+    await renderApp({ role: 'agricultor', route: '/mas/asistente' })
+    await ready('Historial de consultas')
+    expect(screen.queryByText('Calidad del asistente')).not.toBeInTheDocument()
+  })
+
+  it('el experto y el contador no consultan al asistente', async () => {
+    for (const role of ['experto', 'contador']) {
+      const { unmount } = await renderApp({ role, route: '/mas/asistente' })
+      await ready('RESUMEN DE HOY')
+      expect(screen.queryByText('Historial de consultas')).not.toBeInTheDocument()
+      unmount()
+    }
+  })
+
+  it('el agricultor consulta al asistente y ve la respuesta', async () => {
+    const { user } = await renderApp({ role: 'agricultor', route: '/mas/asistente' })
+    await ready('Historial de consultas')
+    await user.selectOptions(screen.getByLabelText('Siembra'), PLANTING_ID)
+    await user.type(screen.getByLabelText('Qué está pasando'), 'Manchas amarillas en las hojas nuevas')
+    await user.click(screen.getByRole('button', { name: 'Consultar' }))
+    expect(await screen.findByText('Causas probables')).toBeInTheDocument()
   })
 })
