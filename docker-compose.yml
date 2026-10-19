@@ -1,0 +1,11 @@
+services:
+  campost_react:
+    build:
+      context: .
+      args:
+        VITE_API_URL: ${API_BASE_URL:-https://bckagestion.proyecto.sbs}
+    ports:
+      - "${PUERTO:-3000}:8080"
+    mem_limit: 128m
+    cpus: 0.5
+    restart: unless-stopped

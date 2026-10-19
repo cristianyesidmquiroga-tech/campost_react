@@ -17,6 +17,14 @@ Cliente React del backend FastAPI de AgroGestión, con el mismo diseño que la a
 
 Para probar contra el backend de la nube desde el navegador local, use `VITE_API_URL=/nube`: el servidor de desarrollo reenvía esas peticiones y evita el CORS.
 
+## Docker
+
+```
+docker compose up -d --build
+```
+
+Compila la app con `API_BASE_URL` (por defecto `https://bckagestion.proyecto.sbs`) y la sirve con nginx en el puerto `PUERTO` (por defecto 3000). Las cabeceras de seguridad están en `seguridad.conf` y las rutas de React vuelven a `index.html` en `nginx.conf`. El contenedor tiene 128 MB de memoria y media CPU como límite.
+
 ## Estructura
 
 - `src/styles`: tokens de diseño (color, tipografía, espaciado, radios, sombras).
