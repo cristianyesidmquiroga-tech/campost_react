@@ -127,4 +127,18 @@ describe('vistas por rol', () => {
     expect(screen.getByText('Insumos e inventario')).toBeInTheDocument()
     expect(user).toBeTruthy()
   })
+
+  it('el experto no ve ni entra a los reportes', async () => {
+    await renderApp({ role: 'experto', route: '/mas/reportes' })
+    await ready('RESUMEN DE HOY')
+    expect(screen.queryByText('Tiempos del ciclo')).not.toBeInTheDocument()
+  })
+
+  it('el contador ve los reportes en el menú Más', async () => {
+    const { user } = await renderApp({ role: 'contador' })
+    await ready('RESUMEN DE HOY')
+    await user.click(nav().getByText('Más'))
+    await ready('OPERACIÓN DE CAMPO')
+    expect(screen.getByText('Índices, tiempos y eventos')).toBeInTheDocument()
+  })
 })

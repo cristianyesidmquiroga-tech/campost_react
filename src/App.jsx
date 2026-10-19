@@ -26,6 +26,8 @@ import { WorkerDetailPage } from './pages/workers/WorkerDetailPage'
 import { EventsPage } from './pages/risks/EventsPage'
 import { EventDetailPage } from './pages/risks/EventDetailPage'
 import { NewsPage } from './pages/content/NewsPage'
+import { ReportViewerPage } from './pages/reports/ReportViewerPage'
+import { ReportsPage } from './pages/reports/ReportsPage'
 import { GlossaryPage } from './pages/content/GlossaryPage'
 import { KnowledgePage, KnowledgeDetailPage } from './pages/content/KnowledgePage'
 import { PaymentsPage } from './pages/payments/PaymentsPage'
@@ -78,6 +80,8 @@ function Authenticated() {
           <Route path="mas/procesos/:id" element={<Guarded allowed={access.seesProcesses}><ProcessDetailPage /></Guarded>} />
           <Route path="mas/eventos" element={<Guarded allowed={access.seesRisks}><EventsPage /></Guarded>} />
           <Route path="mas/eventos/:id" element={<Guarded allowed={access.seesRisks}><EventDetailPage /></Guarded>} />
+          <Route path="mas/reportes" element={<Guarded allowed={access.seesReports}><ReportsPage /></Guarded>} />
+          <Route path="mas/reportes/:id" element={<Guarded allowed={access.seesReports}><ReportViewerPage /></Guarded>} />
           <Route path="mas/novedades" element={<NewsPage />} />
           <Route path="mas/glosario" element={<GlossaryPage />} />
           <Route path="mas/conocimiento" element={<KnowledgePage />} />

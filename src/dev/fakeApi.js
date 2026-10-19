@@ -139,6 +139,14 @@ function routes(opts) {
     ],
     [`POST fincas/${FARM_ID}/procesos/${PROCESS_ID}/etapas`]: () => [201, {}],
     [`POST fincas/${FARM_ID}/etapas/e2/finalizar`]: () => [201, {}],
+    'GET reportes': () => [
+      { id: 'indices', titulo: 'Índices por planta', descripcion: 'Plantas por hectárea y plantas perdidas de cada siembra.', disponible: true, motivo: null, roles: ['admin', 'agricultor', 'contador'] },
+      { id: 'cronograma', titulo: 'Tiempos del ciclo', descripcion: 'En qué fase va cada ciclo y cuándo debería terminar.', disponible: true, motivo: null, roles: ['admin', 'agricultor', 'contador'] },
+      { id: 'costos', titulo: 'Costos por ciclo', descripcion: 'Cuánto cuesta cada ciclo.', disponible: false, motivo: 'Disponible cuando haya costos registrados', roles: ['admin', 'agricultor', 'contador'] },
+    ],
+    'GET reportes/indices': () => ({ siembras: [{ siembra_id: PLANTING_ID, cultivo: 'Café', lote_id: LOT_ID, fecha_conteo: '2026-10-02', indicadores: [{ titulo: 'Plantas por hectárea', valor: 3800, unidad: 'plantas por hectárea' }], aviso: null }] }),
+    'GET reportes/cronograma': () => ({ ciclos: [{ siembra_id: PLANTING_ID, ciclo_id: CYCLE_ID, cultivo: 'Café', tipo: 'levante', fecha_inicio: '2026-08-01', fase_actual: 'siembra', fases_planeadas: 3, fecha_fin_planeada: '2027-01-13', aviso: null }] }),
+    'GET reportes/eventos': () => ({ desde: null, hasta: null, total: 1, perdida_estimada_total: '1850000.00', por_tipo: [{ tipo: 'clima', cantidad: 1, perdida_estimada: '1850000.00', perdida_promedio_pct: 12 }], por_severidad: { moderada: 1 }, aviso: null }),
     'GET glosario': () => [
       { id: 'gl1', termino: 'Jornal', explicacion: 'Día de trabajo de una persona en el campo.', categoria: 'mano_de_obra' },
       { id: 'gl2', termino: 'Soqueo', explicacion: 'Corte del cultivo para que rebrote y se renueve la planta.', categoria: 'renovación' },

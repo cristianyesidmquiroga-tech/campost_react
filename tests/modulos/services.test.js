@@ -8,6 +8,7 @@ import { cropDetail, plantingOverview } from '../../src/services/production'
 import { listSupplies, supplyMovements } from '../../src/services/inventory'
 import { listJornales, payJornal } from '../../src/services/payments'
 import { addStage, listProcesses, listStages, moveStage } from '../../src/services/processes'
+import { eventsReport, indicesReport, listReports, scheduleReport } from '../../src/services/reports'
 import { listWorkers, registerWork } from '../../src/services/workers'
 
 let backend
@@ -108,5 +109,20 @@ describe('servicios', () => {
     await moveStage(FARM_ID, 'e2', 'finalizar')
     expect(backend.calls).toContain(`POST fincas/${FARM_ID}/procesos/${PROCESS_ID}/etapas`)
     expect(backend.calls).toContain(`POST fincas/${FARM_ID}/etapas/e2/finalizar`)
+  })
+
+  it('los reportes marcan cuáles no están disponibles', async () => {
+    const reports = await listReports()
+    expect(reports.map((r) => r.id)).toEqual(['indices', 'cronograma', 'costos'])
+    expect(reports[2].available).toBe(false)
+    expect(reports[2].reason).toMatch(/costos/)
+  })
+
+  it('los reportes de índices, tiempos y eventos se leen', async () => {
+    expect((await indicesReport(FARM_ID))[0].indicators[0].value).toBe(3800)
+    expect((await scheduleReport(FARM_ID))[0].plannedPhases).toBe(3)
+    const events = await eventsReport(FARM_ID)
+    expect(events.loss).toBe(1850000)
+    expect(events.bySeverity).toEqual([['moderada', 1]])
   })
 })

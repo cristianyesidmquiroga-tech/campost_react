@@ -1,4 +1,4 @@
-import { BookOpen, Bell, Boxes, Cog, GraduationCap, HandCoins, LogOut, Map as MapIcon, Shield, Sprout, TriangleAlert, Users } from 'lucide-react'
+import { BarChart3, BookOpen, Bell, Boxes, Cog, GraduationCap, HandCoins, LogOut, Map as MapIcon, Shield, Sprout, TriangleAlert, Users } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
 import { useConfirm } from '../../hooks/useConfirm'
 import { Button, Card, ListRow, RowGroup, SectionTitle, StatusPill } from '../../components/ui'
@@ -35,6 +35,7 @@ export function MorePage() {
         {access.seesInventory && <ListRow to="/mas/inventario" icon={Boxes} title="Insumos e inventario" subtitle="Existencias, entradas y consumos" />}
         {access.seesProcesses && <ListRow to="/mas/procesos" icon={Cog} title="Procesos de transformación" subtitle="Etapas del secado y beneficio" />}
         {access.managesCatalog && <ListRow to="/produccion/cultivos" icon={Sprout} title="Catálogo de cultivos" subtitle="Perfiles que gobiernan el ciclo" />}
+        {access.seesReports && <ListRow to="/mas/reportes" icon={BarChart3} title="Reportes" subtitle="Índices, tiempos y eventos" />}
         {access.seesRisks && <ListRow to="/mas/eventos" icon={TriangleAlert} title="Eventos adversos" subtitle="Heladas, plagas y lluvias" />}
       </RowGroup>
       <SectionTitle>Conocimiento y ayuda</SectionTitle>
