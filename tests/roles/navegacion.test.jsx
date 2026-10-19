@@ -209,4 +209,24 @@ describe('vistas por rol', () => {
     await user.click(screen.getByRole('button', { name: 'Consultar' }))
     expect(await screen.findByText('Causas probables')).toBeInTheDocument()
   })
+
+  it('todos los perfiles pueden cambiar su contraseña desde Mi cuenta', async () => {
+    for (const role of ['admin', 'agricultor', 'contador', 'experto']) {
+      const { user, unmount } = await renderApp({ role, route: '/mas/cuenta' })
+      await user.click(await screen.findByRole('button', { name: 'Cambiar contraseña' }))
+      expect(await screen.findByRole('button', { name: 'Guardar contraseña' })).toBeInTheDocument()
+      unmount()
+    }
+  })
+
+  it('el cambio de contraseña valida el largo y la confirmación', async () => {
+    const { user } = await renderApp({ role: 'agricultor', route: '/mas/cuenta' })
+    await user.click(await screen.findByRole('button', { name: 'Cambiar contraseña' }))
+    await user.type(await screen.findByLabelText('Contraseña actual'), 'actual-1234')
+    await user.type(screen.getByLabelText('Contraseña nueva'), 'corta')
+    await user.type(screen.getByLabelText('Repita la contraseña nueva'), 'otra')
+    await user.click(screen.getByRole('button', { name: 'Guardar contraseña' }))
+    expect(await screen.findByText('Debe tener al menos 10 caracteres.')).toBeInTheDocument()
+    expect(screen.getByText('Las contraseñas no coinciden.')).toBeInTheDocument()
+  })
 })

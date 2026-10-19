@@ -10,6 +10,7 @@ import { listJornales, payJornal } from '../../src/services/payments'
 import { addStage, listProcesses, listStages, moveStage } from '../../src/services/processes'
 import { askAssistant, assistantQuality, getConsultation, listConsultations } from '../../src/services/assistant'
 import { listAnimalEvents, listAnimals, listFeeding, listLots as listAnimalLots, listProduction, listSpecies } from '../../src/services/livestock'
+import { changePassword } from '../../src/services/auth'
 import { listBatches } from '../../src/services/nursery'
 import { eventsReport, indicesReport, listReports, scheduleReport } from '../../src/services/reports'
 import { listWorkers, registerWork } from '../../src/services/workers'
@@ -158,5 +159,10 @@ describe('servicios', () => {
     const quality = await assistantQuality()
     expect(quality.percent).toBeCloseTo(66.7, 1)
     expect(quality.helpful + quality.notHelpful + quality.wrong).toBe(6)
+  })
+
+  it('el cambio de clave se envía con la clave actual y la nueva', async () => {
+    await changePassword('actual-1234', 'nueva-clave-segura')
+    expect(backend.calls).toContain('POST cuenta/cambiar-clave')
   })
 })

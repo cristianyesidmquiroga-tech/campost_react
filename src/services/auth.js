@@ -54,6 +54,8 @@ export async function restoreSession() {
   }
 }
 
+export const changePassword = (current, next) => api.post('cuenta/cambiar-clave', { clave_actual: current, clave_nueva: next })
+
 export function signOut() {
   setToken(null)
   writeStored(null)
