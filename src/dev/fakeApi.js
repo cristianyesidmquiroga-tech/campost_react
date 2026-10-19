@@ -9,6 +9,9 @@ export const RISK_ID = 'r0000000-0000-4000-8000-000000000001'
 export const EVENT_ID = 'e0000000-0000-4000-8000-000000000001'
 export const PROCESS_ID = 'p0000000-0000-4000-8000-000000000001'
 export const SUPPLY_ID = 'n0000000-0000-4000-8000-000000000001'
+export const SPECIES_ID = 'sp000000-0000-4000-8000-000000000001'
+export const ANIMAL_LOT_ID = 'la000000-0000-4000-8000-000000000001'
+export const ANIMAL_ID = 'an000000-0000-4000-8000-000000000001'
 export const BATCH_ID = 'v0000000-0000-4000-8000-000000000001'
 export const ROLES = ['admin', 'agricultor', 'contador', 'experto']
 
@@ -152,6 +155,18 @@ function routes(opts) {
     'POST propagacion': () => [201, {}],
     [`PATCH propagacion/${BATCH_ID}`]: () => ({}),
     [`POST propagacion/${BATCH_ID}/trasplante`]: () => [201, {}],
+    [`GET fincas/${FARM_ID}/especies`]: () => [{ id: SPECIES_ID, finca_id: FARM_ID, nombre: 'Bovinos', descripcion: 'Ganado de leche y carne.' }],
+    [`POST fincas/${FARM_ID}/especies`]: () => [201, {}],
+    [`GET fincas/${FARM_ID}/lotes-animales`]: () => [{ id: ANIMAL_LOT_ID, finca_id: FARM_ID, especie_id: SPECIES_ID, nombre: 'Vacas de ordeño', cantidad: '12', ubicacion: 'Potrero alto' }],
+    [`POST fincas/${FARM_ID}/lotes-animales`]: () => [201, {}],
+    [`GET fincas/${FARM_ID}/animales`]: () => [{ id: ANIMAL_ID, finca_id: FARM_ID, especie_id: SPECIES_ID, lote_animal_id: ANIMAL_LOT_ID, arete: 'A-102', nombre: 'Mariposa', sexo: 'hembra', raza: 'Holstein', nacimiento: '2023-04-10T00:00:00', madre_id: null, padre_id: null, estado: 'activo' }],
+    [`POST fincas/${FARM_ID}/animales`]: () => [201, {}],
+    [`GET fincas/${FARM_ID}/eventos-animales`]: () => [{ id: 'ev1', finca_id: FARM_ID, animal_id: ANIMAL_ID, lote_animal_id: null, tipo: 'vacunacion', fecha: '2026-09-15T00:00:00', producto: 'Aftosa', dosis: null, retiro_hasta: null, notas: null }],
+    [`POST fincas/${FARM_ID}/eventos-animales`]: () => [201, {}],
+    [`GET fincas/${FARM_ID}/produccion-animal`]: () => [{ id: 'pr1', finca_id: FARM_ID, lote_animal_id: ANIMAL_LOT_ID, fecha: '2026-10-01T00:00:00', tipo: 'Leche', cantidad: '210', unidad: 'litros' }],
+    [`POST fincas/${FARM_ID}/produccion-animal`]: () => [201, {}],
+    [`GET fincas/${FARM_ID}/alimentacion-animal`]: () => [{ id: 'al1', finca_id: FARM_ID, lote_animal_id: ANIMAL_LOT_ID, alimento: 'Concentrado', cantidad: '60', costo: '180000.00', fecha: '2026-10-01T00:00:00' }],
+    [`POST fincas/${FARM_ID}/alimentacion-animal`]: () => [201, {}],
     'GET glosario': () => [
       { id: 'gl1', termino: 'Jornal', explicacion: 'Día de trabajo de una persona en el campo.', categoria: 'mano_de_obra' },
       { id: 'gl2', termino: 'Soqueo', explicacion: 'Corte del cultivo para que rebrote y se renueve la planta.', categoria: 'renovación' },

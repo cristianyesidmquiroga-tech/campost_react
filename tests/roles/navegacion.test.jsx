@@ -160,4 +160,24 @@ describe('vistas por rol', () => {
     await user.click(screen.getByRole('button', { name: /Nuevo lote/ }))
     expect(await screen.findByRole('button', { name: 'Guardar lote' })).toBeInTheDocument()
   })
+
+  it('contador y experto no entran a los animales', async () => {
+    for (const role of ['contador', 'experto']) {
+      const { unmount } = await renderApp({ role, route: '/mas/animales' })
+      await ready('RESUMEN DE HOY')
+      expect(screen.queryByText('Vacas de ordeño')).not.toBeInTheDocument()
+      unmount()
+    }
+  })
+
+  it('el agricultor registra especie, lote y animal desde el botón Registrar', async () => {
+    const { user } = await renderApp({ role: 'agricultor', route: '/mas/animales' })
+    await ready('Vacas de ordeño')
+    for (const [row, button] of [['Especie', 'Guardar especie'], ['Lote de animales', 'Guardar lote'], ['Animal', 'Guardar animal']]) {
+      await user.click(screen.getByRole('button', { name: /Registrar/ }))
+      await user.click(await screen.findByText(row))
+      expect(await screen.findByRole('button', { name: button })).toBeInTheDocument()
+      await user.keyboard('{Escape}')
+    }
+  })
 })

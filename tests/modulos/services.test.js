@@ -8,6 +8,7 @@ import { cropDetail, plantingOverview } from '../../src/services/production'
 import { listSupplies, supplyMovements } from '../../src/services/inventory'
 import { listJornales, payJornal } from '../../src/services/payments'
 import { addStage, listProcesses, listStages, moveStage } from '../../src/services/processes'
+import { listAnimalEvents, listAnimals, listFeeding, listLots as listAnimalLots, listProduction, listSpecies } from '../../src/services/livestock'
 import { listBatches } from '../../src/services/nursery'
 import { eventsReport, indicesReport, listReports, scheduleReport } from '../../src/services/reports'
 import { listWorkers, registerWork } from '../../src/services/workers'
@@ -132,5 +133,15 @@ describe('servicios', () => {
     expect(batches).toHaveLength(1)
     expect(batches[0].ready - batches[0].transplanted).toBe(200)
     expect(await listBatches('otra-finca')).toHaveLength(0)
+  })
+
+  it('el pecuario relaciona especies, lotes, animales y eventos', async () => {
+    expect((await listSpecies(FARM_ID))[0].name).toBe('Bovinos')
+    expect((await listAnimalLots(FARM_ID))[0].quantity).toBe(12)
+    const animals = await listAnimals(FARM_ID)
+    expect(animals[0].tag).toBe('A-102')
+    expect((await listAnimalEvents(FARM_ID))[0].animalId).toBe(animals[0].id)
+    expect((await listProduction(FARM_ID))[0].unit).toBe('litros')
+    expect((await listFeeding(FARM_ID))[0].cost).toBe(180000)
   })
 })

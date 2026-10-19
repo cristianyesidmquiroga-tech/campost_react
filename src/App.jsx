@@ -25,6 +25,8 @@ import { WorkersPage } from './pages/workers/WorkersPage'
 import { WorkerDetailPage } from './pages/workers/WorkerDetailPage'
 import { EventsPage } from './pages/risks/EventsPage'
 import { EventDetailPage } from './pages/risks/EventDetailPage'
+import { AnimalDetailPage, AnimalLotDetailPage, SpeciesDetailPage } from './pages/livestock/LivestockDetailPages'
+import { LivestockPage } from './pages/livestock/LivestockPage'
 import { NurseryPage } from './pages/nursery/NurseryPage'
 import { NewsPage } from './pages/content/NewsPage'
 import { ReportViewerPage } from './pages/reports/ReportViewerPage'
@@ -81,6 +83,10 @@ function Authenticated() {
           <Route path="mas/procesos/:id" element={<Guarded allowed={access.seesProcesses}><ProcessDetailPage /></Guarded>} />
           <Route path="mas/eventos" element={<Guarded allowed={access.seesRisks}><EventsPage /></Guarded>} />
           <Route path="mas/eventos/:id" element={<Guarded allowed={access.seesRisks}><EventDetailPage /></Guarded>} />
+          <Route path="mas/animales" element={<Guarded allowed={access.seesLivestock}><LivestockPage /></Guarded>} />
+          <Route path="mas/animales/lotes/:id" element={<Guarded allowed={access.seesLivestock}><AnimalLotDetailPage /></Guarded>} />
+          <Route path="mas/animales/animal/:id" element={<Guarded allowed={access.seesLivestock}><AnimalDetailPage /></Guarded>} />
+          <Route path="mas/animales/especies/:id" element={<Guarded allowed={access.seesLivestock}><SpeciesDetailPage /></Guarded>} />
           <Route path="mas/vivero" element={<Guarded allowed={access.seesNursery}><NurseryPage /></Guarded>} />
           <Route path="mas/reportes" element={<Guarded allowed={access.seesReports}><ReportsPage /></Guarded>} />
           <Route path="mas/reportes/:id" element={<Guarded allowed={access.seesReports}><ReportViewerPage /></Guarded>} />
