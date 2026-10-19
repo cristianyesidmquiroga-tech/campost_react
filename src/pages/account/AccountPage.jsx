@@ -1,18 +1,22 @@
 import { useState } from 'react'
-import { BookOpen, FileText, LogOut, Mail, Mountain, Camera, ShieldCheck, CalendarDays } from 'lucide-react'
+import { BookOpen, FileText, KeyRound, LogOut, Mail, Mountain, Camera, ShieldCheck, CalendarDays } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
 import { getConsent, getPolicy } from '../../services/content'
 import { useAsync } from '../../hooks/useAsync'
+import { useToast } from '../../context/ToastContext'
 import { useConfirm } from '../../hooks/useConfirm'
 import { Button, Card, InfoList, InfoRow, Loadable, SectionTitle, SkeletonList, StatusPill } from '../../components/ui'
 import { DetailPage, Gap } from '../../components/layout/Page'
 import { formatDate, formatNumber } from '../../lib/format'
+import { PasswordSheet } from './PasswordSheet'
 import { PolicySheet } from './PolicySheet'
 
 export function AccountPage() {
   const { session, access, signOut } = useAuth()
   const [confirm, dialog] = useConfirm()
   const [policyOpen, setPolicyOpen] = useState(false)
+  const [passwordOpen, setPasswordOpen] = useState(false)
+  const show = useToast()
   const privacy = useAsync(async () => ({ consent: await getConsent(), policy: await getPolicy() }), [])
 
   const leave = async () => {
@@ -56,6 +60,9 @@ export function AccountPage() {
           </>
         )}
       </Loadable>
+      <Gap size="sm" />
+      <Button wide variant="outline" icon={KeyRound} onClick={() => setPasswordOpen(true)}>Cambiar contraseña</Button>
+      {passwordOpen && <PasswordSheet onClose={(saved) => { setPasswordOpen(false); if (saved) show('Contraseña actualizada.') }} />}
       <Gap size="lg" />
       <Button wide variant="outline danger" icon={LogOut} onClick={leave}>Cerrar sesión en este dispositivo</Button>
       {dialog}
