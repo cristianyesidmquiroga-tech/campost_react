@@ -5,6 +5,7 @@ export const SCREENS = [
   ['producción', '/produccion', 'BALANCE OPERATIVO ACTUAL'],
   ['detalle de siembra', PLANTING, 'ÍNDICES POR PLANTA'],
   ['detalle de ciclo', `${PLANTING}/ciclos/y0000000-0000-4000-8000-000000000001`, 'LABORES DEL CICLO'],
+  ['detalle de labor', '/produccion/labores/act-1', 'Editar labor'],
   ['catálogo', '/produccion/cultivos', 'Plátano Dominico Hartón de la región'],
   ['ficha de cultivo', '/produccion/cultivos/c0000000-0000-4000-8000-000000000001', 'Coffea arabica'],
   ['dinero', '/dinero', 'DISTRIBUCIÓN DEL GASTO'],

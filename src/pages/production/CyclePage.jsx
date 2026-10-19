@@ -67,7 +67,7 @@ export function CyclePage() {
             ) : (
               <RowGroup>
                 {activities.map((a) => (
-                  <ListRow key={a.id} icon={Hammer} title={a.name} subtitle={`${phaseLabel(a.phase)} · ${formatHa(a.areaHa)}`} trailing={<StatusPill tone="info">{humanize(a.status)}</StatusPill>} />
+                  <ListRow key={a.id} to={`/produccion/labores/${a.id}`} icon={Hammer} title={a.name} subtitle={`${phaseLabel(a.phase)} · ${formatHa(a.areaHa)}`} trailing={<StatusPill tone="info">{humanize(a.status)}</StatusPill>} />
                 ))}
               </RowGroup>
             )}

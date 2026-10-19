@@ -10,6 +10,7 @@ import { listJornales, payJornal } from '../../src/services/payments'
 import { addStage, listProcesses, listStages, moveStage } from '../../src/services/processes'
 import { askAssistant, assistantQuality, getConsultation, listConsultations } from '../../src/services/assistant'
 import { listAnimalEvents, listAnimals, listFeeding, listLots as listAnimalLots, listProduction, listSpecies } from '../../src/services/livestock'
+import { cancelActivity, listActivities, updateActivity } from '../../src/services/activities'
 import { changePassword } from '../../src/services/auth'
 import { listBatches } from '../../src/services/nursery'
 import { eventsReport, indicesReport, listReports, scheduleReport } from '../../src/services/reports'
@@ -164,5 +165,15 @@ describe('servicios', () => {
   it('el cambio de clave se envía con la clave actual y la nueva', async () => {
     await changePassword('actual-1234', 'nueva-clave-segura')
     expect(backend.calls).toContain('POST cuenta/cambiar-clave')
+  })
+
+  it('las labores se listan, se editan y se anulan', async () => {
+    const [activity] = await listActivities(FARM_ID)
+    expect(activity.areaHa).toBe(4.5)
+    expect(activity.cycleId).toBe(CYCLE_ID)
+    await updateActivity(FARM_ID, 'act-1', { name: 'Socola', areaHa: 4, end: '2026-10-10' })
+    await cancelActivity(FARM_ID, 'act-1')
+    expect(backend.calls).toContain('PATCH fincas/' + FARM_ID + '/actividades/act-1')
+    expect(backend.calls).toContain('DELETE fincas/' + FARM_ID + '/actividades/act-1')
   })
 })

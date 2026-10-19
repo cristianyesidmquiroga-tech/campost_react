@@ -110,6 +110,8 @@ function routes(opts) {
     [`GET ciclos/${CYCLE_ID}/cronograma`]: () => schedule,
     [`GET ciclos/${CYCLE_ID}/necesidad-insumos`]: () => ({ ciclo_id: CYCLE_ID, items: [], aviso: 'Falta cargar las dosis.' }),
     [`GET fincas/${FARM_ID}/actividades`]: () => [{ id: 'act-1', finca_id: FARM_ID, ciclo_id: CYCLE_ID, nombre: 'Socola y limpieza selectiva del lote', fase: 'preparacion', fecha_inicio: '2026-08-05', fecha_fin: null, area_trabajada: '4.5000', estado: 'en_curso' }],
+    [`PATCH fincas/${FARM_ID}/actividades/act-1`]: () => ({}),
+    [`DELETE fincas/${FARM_ID}/actividades/act-1`]: () => ({}),
     [`POST fincas/${FARM_ID}/actividades`]: () => [201, { id: 'act-1' }],
     [`POST fincas/${FARM_ID}/jornales`]: () => [201, {}],
     [`POST fincas/${FARM_ID}/cosechas`]: () => [201, {}],
