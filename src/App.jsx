@@ -25,6 +25,7 @@ import { WorkersPage } from './pages/workers/WorkersPage'
 import { WorkerDetailPage } from './pages/workers/WorkerDetailPage'
 import { EventsPage } from './pages/risks/EventsPage'
 import { EventDetailPage } from './pages/risks/EventDetailPage'
+import { KnowledgeReviewPage } from './pages/content/KnowledgeReviewPage'
 import { UsersPage } from './pages/account/UsersPage'
 import { ActivityDetailPage } from './pages/production/ActivityDetailPage'
 import { AssistantPage } from './pages/assistant/AssistantPage'
@@ -101,6 +102,7 @@ function Authenticated() {
           <Route path="mas/reportes/:id" element={<Guarded allowed={access.seesReports}><ReportViewerPage /></Guarded>} />
           <Route path="mas/novedades" element={<NewsPage />} />
           <Route path="mas/glosario" element={<GlossaryPage />} />
+          <Route path="mas/conocimiento/revision" element={<Guarded allowed={access.reviewsKnowledge}><KnowledgeReviewPage /></Guarded>} />
           <Route path="mas/conocimiento" element={<KnowledgePage />} />
           <Route path="mas/conocimiento/:id" element={<KnowledgeDetailPage />} />
           <Route path="mas/usuarios" element={<Guarded allowed={access.createsUsers}><UsersPage /></Guarded>} />

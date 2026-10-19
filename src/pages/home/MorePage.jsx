@@ -1,4 +1,4 @@
-import { BarChart3, Beef, UserCog, MessageCircleQuestion, BookOpen, Bell, Boxes, Cog, GraduationCap, Leaf, HandCoins, LogOut, Map as MapIcon, Shield, Sprout, TriangleAlert, Users } from 'lucide-react'
+import { BarChart3, BookCheck, Beef, UserCog, MessageCircleQuestion, BookOpen, Bell, Boxes, Cog, GraduationCap, Leaf, HandCoins, LogOut, Map as MapIcon, Shield, Sprout, TriangleAlert, Users } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
 import { useConfirm } from '../../hooks/useConfirm'
 import { Button, Card, ListRow, RowGroup, SectionTitle, StatusPill } from '../../components/ui'
@@ -44,6 +44,7 @@ export function MorePage() {
       <SectionTitle>Conocimiento y ayuda</SectionTitle>
       <RowGroup>
         <ListRow to="/mas/conocimiento" icon={BookOpen} title="Biblioteca de conocimiento" subtitle="Problemas y manejo validado" />
+        {access.reviewsKnowledge && <ListRow to="/mas/conocimiento/revision" icon={BookCheck} title="Revisión de conocimiento" subtitle="Validar, retirar o reabrir fichas" />}
         <ListRow to="/mas/glosario" icon={GraduationCap} title="Glosario del campo" subtitle="Términos del agro explicados" />
         <ListRow to="/mas/novedades" icon={Bell} title="Novedades de mi región" subtitle="Noticias y alertas vigentes" />
       </RowGroup>

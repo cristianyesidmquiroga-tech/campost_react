@@ -202,7 +202,8 @@ function routes(opts) {
       { id: 'gl2', termino: 'Soqueo', explicacion: 'Corte del cultivo para que rebrote y se renueve la planta.', categoria: 'renovación' },
     ],
     'GET noticias': () => page([{ id: 'n1', titulo: 'Alerta de lluvias en su región', resumen: 'Se esperan lluvias fuertes esta semana en el suroeste.', enlace: 'https://ejemplo.test/noticia', fuente: 'Fuente de ejemplo', region_dane: '05', cultivo_id: null, publicada: '2026-10-07T10:00:00', vigente_hasta: new Date(Date.now() + 6.5 * 86400000).toISOString() }]),
-    'GET conocimiento': () => page([{ id: 'p1', nombre: 'Manchas amarillas en la hoja', tipo: 'enfermedad', cultivo_id: CROP_ID, estado: 'validado' }]),
+    'GET conocimiento': () => page([{ id: 'p1', nombre: 'Manchas amarillas en la hoja', tipo: 'enfermedad', cultivo_id: CROP_ID, estado: 'validado' }, { id: 'p2', nombre: 'Hojas con agujeros', tipo: 'plaga', cultivo_id: CROP_ID, estado: 'borrador' }]),
+    'PATCH conocimiento/p2/estado': () => ({}),
     'GET conocimiento/p1': () => ({ id: 'p1', nombre: 'Manchas amarillas en la hoja', tipo: 'enfermedad', cultivo_id: CROP_ID, estado: 'validado', causa: 'Hongo favorecido por la humedad.', sintomas: [{ descripcion: 'Manchas amarillas en el envés.' }], manejos: [{ descripcion: 'Mejore la aireación.' }], aviso: 'Consulte con asistencia técnica.', validaciones: [] }),
   }
 }
