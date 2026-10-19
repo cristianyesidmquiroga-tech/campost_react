@@ -71,7 +71,7 @@ export function AnimalLotDetailPage() {
                 </InfoList>
               </Card>
               {access.managesLivestock && (
-                <div className="row gap-8" style={{ margin: '12px 0' }}>
+                <div className="row gap-8" style={{ margin: '12px 0', flexWrap: 'wrap' }}>
                   <Button onClick={() => setSheet('production')}>Registrar producción</Button>
                   <Button variant="outline" onClick={() => setSheet('feeding')}>Registrar alimentación</Button>
                   <Button variant="outline" onClick={() => setSheet('event')}>Registrar evento</Button>

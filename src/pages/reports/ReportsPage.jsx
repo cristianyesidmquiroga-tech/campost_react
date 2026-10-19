@@ -1,7 +1,7 @@
 import { BarChart3, ChevronRight, Clock, Lock, ShieldAlert } from 'lucide-react'
 import { useAsync } from '../../hooks/useAsync'
 import { listReports } from '../../services/reports'
-import { Card, EmptyState, IconBadge, Loadable, SkeletonList, StatusPill } from '../../components/ui'
+import { Card, EmptyState, IconBadge, Loadable, SkeletonList } from '../../components/ui'
 import { DetailPage } from '../../components/layout/Page'
 
 const ICONS = { indices: BarChart3, cronograma: Clock, eventos: ShieldAlert }
@@ -23,7 +23,7 @@ export function ReportsPage() {
                     <div className="grow">
                       <h3 className="headline-md clamp-1" style={{ fontSize: 18 }}>{report.title}</h3>
                       <p className="body-sm">{report.description}</p>
-                      {!report.available && <StatusPill tone="warn">{report.reason ?? 'No disponible todavía'}</StatusPill>}
+                      {!report.available && <p className="body-sm" style={{ color: 'var(--warn, #8a5a00)' }}>{report.reason ?? 'No disponible todavía'}</p>}
                     </div>
                     {report.available && <ChevronRight size={20} className="chevron" aria-hidden />}
                   </div>

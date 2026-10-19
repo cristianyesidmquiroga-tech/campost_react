@@ -45,12 +45,12 @@ export function NurseryPage() {
                       </div>
                       <div style={{ margin: '12px 0' }}>
                         <ProgressLine value={b.total ? Math.min(100, (b.ready / b.total) * 100) : 0} />
-                        <p className="body-sm" style={{ marginTop: 6 }}>
+                        <p className="body-sm" style={{ marginTop: 6, overflowWrap: 'anywhere' }}>
                           {formatNumber(b.total)} puestas · {formatNumber(b.germinated)} germinadas · {formatNumber(b.ready)} listas · {formatNumber(b.lost)} perdidas · {formatNumber(b.transplanted)} trasplantadas
                         </p>
                       </div>
                       {access.managesProduction && (
-                        <div className="row gap-8">
+                        <div className="row gap-8" style={{ flexWrap: 'wrap' }}>
                           <Button variant="outline" onClick={() => setSheet({ kind: 'progress', batch: b })}>Actualizar avance</Button>
                           <Button disabled={pending <= 0} onClick={() => setSheet({ kind: 'transplant', batch: b })}>Trasplantar</Button>
                         </div>

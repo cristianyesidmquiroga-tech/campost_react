@@ -68,7 +68,7 @@ export function ConsultationDetailPage() {
               <div style={{ height: 12 }} />
               {consultation.answer && <AnswerView answer={consultation.answer} />}
               <SectionTitle>Qué tal le pareció</SectionTitle>
-              <div className="row gap-8">
+              <div className="row gap-8" style={{ flexWrap: 'wrap' }}>
                 {Object.entries(RATINGS).map(([value, label]) => (
                   <Button key={value} variant={current === value ? undefined : 'outline'} onClick={() => rate(value)}>{label}</Button>
                 ))}
