@@ -23,7 +23,7 @@ Para probar contra el backend de la nube desde el navegador local, use `VITE_API
 docker compose up -d --build
 ```
 
-Compila la app con `API_BASE_URL` (por defecto `https://bckagestion.proyecto.sbs`) y la sirve con nginx en el puerto `PUERTO` (por defecto 3000). Las cabeceras de seguridad están en `seguridad.conf` y las rutas de React vuelven a `index.html` en `nginx.conf`. El contenedor tiene 128 MB de memoria y media CPU como límite.
+Compila la app con `API_BASE_URL` (por defecto `https://bckagestion.proyecto.sbs`) y la sirve con nginx en el puerto interno 8080, sin publicarlo en el servidor: el proxy de Coolify entra por ese puerto. Para verla en local use `docker build -t campost_react . && docker run --rm -p 3000:8080 campost_react`. Las cabeceras de seguridad están en `seguridad.conf` y las rutas de React vuelven a `index.html` en `nginx.conf`. El contenedor tiene 128 MB de memoria y media CPU como límite.
 
 ## Estructura
 
