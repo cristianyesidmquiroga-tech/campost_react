@@ -3,11 +3,11 @@
 <details>
 <summary><b>Read this in English</b></summary>
 
-React client for the AgroGestión FastAPI backend, with the same design system as the Flutter app (Android, web and Windows). Sign in, data consent, farms and lots, plantings, cycles and labors, plant counts, nursery, adverse events, money, workers, inventory, processes, payments, livestock, reports, assistant, regional news and alerts, glossary, knowledge library and its review, users and password change. Each role (admin, farmer, accountant, expert) sees only what its permissions allow. Run `npm test` before every pull request; GitHub Actions runs the same checks plus a layout check at four screen widths.
+React client for the AgroGestión FastAPI backend, with the same design system as the Flutter app (Android, web and Windows). Sign in, data consent, farms and lots, plantings, cycles and labors, plant counts, nursery, adverse events, money, workers, inventory, processes, payments, livestock, reports, assistant, regional news and alerts, glossary, knowledge library and its review, users and password change. Administrators also get user profiles and a control panel with statistics for the whole application: crops, cycle times, harvests, costs, zones and producers. Each role (admin, farmer, accountant, expert) sees only what its permissions allow. Run `npm test` before every pull request; GitHub Actions runs the same checks plus a layout check at four screen widths.
 
 </details>
 
-Cliente React del backend FastAPI de AgroGestión, con el mismo diseño que la app Flutter (Android, web y Windows). Cubre inicio de sesión, autorización de datos, fincas y lotes, siembras, ciclos y labores, conteo de plantas, vivero, eventos adversos, dinero, trabajadores, inventario, procesos, pagos, pecuario, reportes, asistente, novedades y alertas regionales, glosario, biblioteca de conocimiento y su revisión, usuarios y cambio de contraseña. Cada perfil ve solo lo que sus permisos permiten.
+Cliente React del backend FastAPI de AgroGestión, con el mismo diseño que la app Flutter (Android, web y Windows). Cubre inicio de sesión, autorización de datos, fincas y lotes, siembras, ciclos y labores, conteo de plantas, vivero, eventos adversos, dinero, trabajadores, inventario, procesos, pagos, pecuario, reportes, asistente, novedades y alertas regionales, glosario, biblioteca de conocimiento y su revisión, usuarios y cambio de contraseña. El administrador además tiene los perfiles de los usuarios y un panel de control con estadísticas de toda la aplicación: cultivos, tiempos de ciclo, cosechas, costos, zonas y productores. Cada perfil ve solo lo que sus permisos permiten.
 
 ## Ejecutar
 
