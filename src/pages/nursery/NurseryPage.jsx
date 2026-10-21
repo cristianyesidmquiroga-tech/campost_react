@@ -44,7 +44,7 @@ export function NurseryPage() {
                         </div>
                       </div>
                       <div style={{ margin: '12px 0' }}>
-                        <ProgressLine value={b.total ? Math.min(100, (b.ready / b.total) * 100) : 0} />
+                        <ProgressLine value={b.total ? b.ready / b.total : 0} />
                         <p className="body-sm" style={{ marginTop: 6, overflowWrap: 'anywhere' }}>
                           {formatNumber(b.total)} puestas · {formatNumber(b.germinated)} germinadas · {formatNumber(b.ready)} listas · {formatNumber(b.lost)} perdidas · {formatNumber(b.transplanted)} trasplantadas
                         </p>
