@@ -10,6 +10,7 @@ export const EVENT_ID = 'e0000000-0000-4000-8000-000000000001'
 export const PROCESS_ID = 'p0000000-0000-4000-8000-000000000001'
 export const SUPPLY_ID = 'n0000000-0000-4000-8000-000000000001'
 export const CONSULTATION_ID = 'q0000000-0000-4000-8000-000000000001'
+export const USER_ID = 'u-agricultor-1'
 export const SPECIES_ID = 'sp000000-0000-4000-8000-000000000001'
 export const ANIMAL_LOT_ID = 'la000000-0000-4000-8000-000000000001'
 export const ANIMAL_ID = 'an000000-0000-4000-8000-000000000001'
@@ -200,6 +201,40 @@ function routes(opts) {
     [`GET fincas/${FARM_ID}/alertas`]: () => [{ id: 'al-1', finca_id: FARM_ID, fuente_id: 'fa-1', tipo: 'clima', region_dane: '05', titulo: 'Lluvias fuertes en el suroeste', resumen: 'Se esperan lluvias esta semana.', vigente_desde: '2026-10-05T00:00:00', vigente_hasta: '2026-10-12T00:00:00' }],
     'POST alertas/fuentes': () => [201, { id: 'fa-1', nombre: 'IDEAM', url: 'https://ideam.gov.co/alertas' }],
     'POST alertas/fuentes/fa-1/sincronizar': () => [{ titulo: 'Lluvias fuertes en el suroeste' }],
+    'GET usuarios': () => page([
+      { id: 'u-admin', email: 'admin@demo.com', nombre: 'Administrador local', rol: 'admin', activo: true, creado_en: '2026-09-01T10:00:00', ultimo_acceso: '2026-10-19T08:00:00', municipio_dane: null, fincas: 0, siembras: 0 },
+      { id: USER_ID, email: 'hernando@demo.com', nombre: 'Hernando Gómez Restrepo', rol: 'agricultor', activo: true, creado_en: '2026-09-05T10:00:00', ultimo_acceso: null, municipio_dane: '05001', fincas: 1, siembras: 2 },
+    ]),
+    [`GET usuarios/${USER_ID}`]: () => ({
+      id: USER_ID, email: 'hernando@demo.com', nombre: 'Hernando Gómez Restrepo', rol: 'agricultor', activo: true, creado_en: '2026-09-05T10:00:00', ultimo_acceso: null, municipio_dane: '05001', fincas: 1, siembras: 2, bloqueado: false, cosechas: 3, gastos: 5289000, ingresos: 14850000,
+      detalle_fincas: [{ id: FARM_ID, nombre: 'Finca La Esperanza', departamento_dane: '05', municipio_dane: '05001', area_ha: 18.5, siembras: 2, cosechas: 3, gastos: 5289000, ingresos: 14850000 }],
+    }),
+    'GET estadisticas/resumen': () => ({ usuarios: 4, usuarios_activos: 3, usuarios_por_rol: { admin: 1, agricultor: 2, contador: 1 }, fincas: 2, area_ha_fincas: 28.5, siembras: 3, siembras_por_estado: { en_curso: 2, planeada: 1 }, ciclos_abiertos: 2, ciclos_cerrados: 1, cosechas: 5, trabajadores: 3, gastos: 5289000, ingresos: 14850000, utilidad: 9561000, eventos_adversos: 1, perdida_estimada: 1850000 }),
+    'GET estadisticas/crecimiento': () => [
+      { mes: '2026-08', usuarios: 1, fincas: 0, siembras: 0, cosechas: 0, gastos: 0, ingresos: 0 },
+      { mes: '2026-09', usuarios: 2, fincas: 1, siembras: 1, cosechas: 1, gastos: 1548000, ingresos: 0 },
+      { mes: '2026-10', usuarios: 1, fincas: 1, siembras: 2, cosechas: 4, gastos: 3741000, ingresos: 14850000 },
+    ],
+    'GET estadisticas/costos': () => ({ gastos_por_categoria: [{ categoria: 'Mano de obra', registros: 3, total: 3741000 }, { categoria: 'Insumos y fertilizantes', registros: 2, total: 1548000 }], ingresos_por_categoria: [{ categoria: 'Venta de cosecha', registros: 1, total: 14850000 }], gastos: 5289000, ingresos: 14850000, area_sembrada_ha: 9.5, gasto_por_ha: 556736.84, ingreso_por_ha: 1563157.89 }),
+    'GET estadisticas/cultivos': () => [
+      { cultivo_id: CROP_ID, cultivo: 'Café', grupo: 'plantación', siembras: 2, fincas: 2, agricultores: 2, area_ha: 6.5, plantas: 26000, ciclos_abiertos: 1, ciclos_cerrados: 1, duracion_media_dias: 59, ciclo_mas_largo_dias: 59, cosechas: 3, produccion: [{ unidad: 'kilo', cantidad: 120 }], primera_cosecha: '2026-09-01', ultima_cosecha: '2026-10-01', dias_entre_cosechas: 15, gastos: 3000000, ingresos: 14850000, utilidad: 11850000 },
+      { cultivo_id: CROP_ID_2, cultivo: 'Plátano Dominico Hartón de la región', grupo: 'fruta', siembras: 1, fincas: 1, agricultores: 1, area_ha: 3, plantas: 3000, ciclos_abiertos: 1, ciclos_cerrados: 0, duracion_media_dias: null, ciclo_mas_largo_dias: null, cosechas: 0, produccion: [], primera_cosecha: null, ultima_cosecha: null, dias_entre_cosechas: null, gastos: 2289000, ingresos: 0, utilidad: -2289000 },
+    ],
+    'GET estadisticas/zonas': () => [
+      { zona: '05', fincas: 1, agricultores: 1, area_ha_fincas: 18.5, siembras: 2, area_sembrada_ha: 5, cosechas: 3, produccion: [{ unidad: 'kilo', cantidad: 120 }], gastos: 3000000, ingresos: 14850000, utilidad: 11850000, gasto_por_ha: 600000, cultivos_principales: ['Café'] },
+      { zona: '76', fincas: 1, agricultores: 1, area_ha_fincas: 10, siembras: 1, area_sembrada_ha: 4.5, cosechas: 0, produccion: [], gastos: 2289000, ingresos: 0, utilidad: -2289000, gasto_por_ha: 508666.67, cultivos_principales: ['Plátano Dominico Hartón de la región'] },
+    ],
+    'GET estadisticas/produccion': () => page([
+      { id: 'h1', fecha: '2026-10-01', cultivo: 'Café', cantidad: 60, unidad: 'kilo', calidad: 'primera', finca: 'Finca La Esperanza', zona: '05001', agricultor: 'Hernando Gómez Restrepo' },
+      { id: 'h2', fecha: '2026-09-16', cultivo: 'Café', cantidad: 40, unidad: 'kilo', calidad: null, finca: 'Finca La Esperanza', zona: '05001', agricultor: 'Hernando Gómez Restrepo' },
+    ]),
+    'GET estadisticas/siembras': () => page([
+      { id: PLANTING_ID, cultivo: 'Café', estado: 'en_curso', area_ha: 4.5, plantas: 18000, fecha_plan: '2026-08-01', inicio_ciclo: '2026-08-01', finca: 'Finca La Esperanza', zona: '05001', agricultor: 'Hernando Gómez Restrepo' },
+      { id: 's2', cultivo: 'Plátano Dominico Hartón de la región', estado: 'planeada', area_ha: 3, plantas: null, fecha_plan: '2026-11-01', inicio_ciclo: null, finca: 'Finca El Mirador', zona: '76001', agricultor: 'Contadora de prueba' },
+    ]),
+    'GET estadisticas/productores': () => [
+      { usuario_id: USER_ID, nombre: 'Hernando Gómez Restrepo', fincas: 1, cosechas: 3, produccion: [{ unidad: 'kilo', cantidad: 120 }], ultima_cosecha: '2026-10-01' },
+    ],
     'GET glosario': () => [
       { id: 'gl1', termino: 'Jornal', explicacion: 'Día de trabajo de una persona en el campo.', categoria: 'mano_de_obra' },
       { id: 'gl2', termino: 'Soqueo', explicacion: 'Corte del cultivo para que rebrote y se renueve la planta.', categoria: 'renovación' },
