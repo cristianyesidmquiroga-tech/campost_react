@@ -479,4 +479,14 @@ describe('vistas por rol', () => {
     await user.click(await screen.findByRole('tab', { name: 'Productores' }))
     expect(await screen.findByText(/^1 cosecha · .* · 1 finca/)).toBeInTheDocument()
   })
+
+  it('el perfil de usuario escribe en plural o singular según el conteo de cada finca', async () => {
+    const backend = createFakeBackend()
+    const detalle = await (await backend.fetch('http://localhost:8000/usuarios/u-agricultor-1', { headers: { Authorization: 'Bearer token-admin' } })).json()
+    const finca = detalle.detalle_fincas[0]
+    const { user } = await renderApp({ role: 'admin', route: '/mas/usuarios', backend })
+    await user.click(await screen.findByText(detalle.nombre))
+    const esperado = `${plural(finca.siembras, 'siembra', 'siembras')} · ${plural(finca.cosechas, 'cosecha', 'cosechas')}`
+    expect(await screen.findByText(new RegExp(esperado))).toBeInTheDocument()
+  })
 })
