@@ -2,7 +2,7 @@ import { Users } from 'lucide-react'
 import { useAsync } from '../../hooks/useAsync'
 import { adminProducers } from '../../services/admin'
 import { Card, EmptyState, ListRow, Loadable, RowGroup, SectionTitle, SkeletonList } from '../../components/ui'
-import { formatDate, formatNumber, formatUnits } from '../../lib/format'
+import { formatDate, formatNumber, formatUnits, plural } from '../../lib/format'
 import { BarList } from './BarList'
 
 export function ProducersTab() {
@@ -24,7 +24,7 @@ export function ProducersTab() {
                   icon={Users}
                   title={p.name}
                   titleLines={2}
-                  subtitle={`${formatNumber(p.harvests)} cosechas · ${formatUnits(p.production)} · ${formatNumber(p.farms)} fincas${p.lastHarvest ? ` · última ${formatDate(p.lastHarvest)}` : ''}`}
+                  subtitle={`${plural(p.harvests, 'cosecha', 'cosechas')} · ${formatUnits(p.production)} · ${plural(p.farms, 'finca', 'fincas')}${p.lastHarvest ? ` · última ${formatDate(p.lastHarvest)}` : ''}`}
                 />
               ))}
             </RowGroup>

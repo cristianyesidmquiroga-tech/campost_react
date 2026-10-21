@@ -465,4 +465,18 @@ describe('vistas por rol', () => {
     expect(Number(barra.getAttribute('aria-valuenow'))).toBe(Math.round((lote.listas / lote.puestas) * 100))
     expect(Number(barra.getAttribute('aria-valuenow'))).toBeLessThan(100)
   })
+
+  it('los productores usan singular cuando solo hay una cosecha o una finca', async () => {
+    const backend = createFakeBackend()
+    const original = backend.fetch
+    backend.fetch = async (input, init) => {
+      if (String(input).includes('estadisticas/productores')) {
+        return new Response(JSON.stringify([{ usuario_id: 'p1', nombre: 'Productora única', fincas: 1, cosechas: 1, produccion: [{ unidad: 'kilo', cantidad: 10 }], ultima_cosecha: '2026-10-01' }]), { status: 200, headers: { 'Content-Type': 'application/json' } })
+      }
+      return original(input, init)
+    }
+    const { user } = await renderApp({ role: 'admin', route: '/mas/panel', backend })
+    await user.click(await screen.findByRole('tab', { name: 'Productores' }))
+    expect(await screen.findByText(/^1 cosecha · .* · 1 finca/)).toBeInTheDocument()
+  })
 })
