@@ -8,7 +8,7 @@ import { gone, ready, renderApp } from '../support/harness'
 const nav = () => within(screen.getByRole('navigation', { name: 'Principal' }))
 
 describe('vistas por rol', () => {
-  for (const role of ['admin', 'agricultor']) {
+  for (const role of ['agricultor']) {
     it(`${role} ve cuatro pestañas y el registro rápido completo`, async () => {
       const { user } = await renderApp({ role })
       await ready('RESUMEN DE HOY')
@@ -61,8 +61,8 @@ describe('vistas por rol', () => {
     await ready('SALDO NETO DISPONIBLE')
   })
 
-  it('anular un movimiento es del administrador y el contador', async () => {
-    for (const [role, canCancel] of [['admin', true], ['agricultor', false], ['contador', true]]) {
+  it('anular un movimiento es solo del contador', async () => {
+    for (const [role, canCancel] of [['agricultor', false], ['contador', true]]) {
       const { unmount } = await renderApp({ role, route: '/dinero/movimientos/g1000000-0000-4000-8000-000000000001' })
       await ready('TRAZABILIDAD')
       if (canCancel) expect(screen.getByRole('button', { name: 'Anular movimiento' })).toBeInTheDocument()
@@ -92,8 +92,8 @@ describe('vistas por rol', () => {
     await gone('Sus datos')
   })
 
-  it('solo administrador y contador marcan pagos', async () => {
-    for (const [role, canPay] of [['admin', true], ['agricultor', false], ['contador', true]]) {
+  it('solo el contador marca pagos', async () => {
+    for (const [role, canPay] of [['agricultor', false], ['contador', true]]) {
       const { unmount } = await renderApp({ role, route: '/mas/pagos' })
       await ready('Pedro Nel Builes')
       if (canPay) expect(screen.getByRole('button', { name: 'Marcar como pagado' })).toBeInTheDocument()
@@ -102,8 +102,8 @@ describe('vistas por rol', () => {
     }
   })
 
-  it('solo administrador y agricultor crean insumos y procesos', async () => {
-    for (const [role, can] of [['admin', true], ['agricultor', true], ['contador', false]]) {
+  it('solo el agricultor crea insumos y procesos', async () => {
+    for (const [role, can] of [['agricultor', true], ['contador', false]]) {
       const inv = await renderApp({ role, route: '/mas/inventario' })
       await ready('Fertilizante triple 15')
       expect(!!screen.queryByRole('button', { name: 'Nuevo insumo' })).toBe(can)
@@ -185,9 +185,8 @@ describe('vistas por rol', () => {
   })
 
   it('solo el administrador ve la calidad del asistente', async () => {
-    const admin = await renderApp({ role: 'admin', route: '/mas/asistente' })
-    await ready('Historial de consultas')
-    expect(screen.getByText('Calidad del asistente')).toBeInTheDocument()
+    const admin = await renderApp({ role: 'admin', route: '/mas/asistente/calidad' })
+    expect(await screen.findByText('Con valoración')).toBeInTheDocument()
     admin.unmount()
     await renderApp({ role: 'agricultor', route: '/mas/asistente' })
     await ready('Historial de consultas')
@@ -245,12 +244,12 @@ describe('vistas por rol', () => {
   })
 
   it('solo el administrador crea usuarios', async () => {
-    const admin = await renderApp({ role: 'admin', route: '/mas/usuarios' })
+    const admin = await renderApp({ role: 'admin', route: '/usuarios' })
     await admin.user.click(await screen.findByRole('tab', { name: 'Crear' }))
     expect(await screen.findByRole('button', { name: 'Crear usuario' })).toBeInTheDocument()
     admin.unmount()
     for (const role of ['agricultor', 'contador', 'experto']) {
-      const { unmount } = await renderApp({ role, route: '/mas/usuarios' })
+      const { unmount } = await renderApp({ role, route: '/usuarios' })
       await ready('RESUMEN DE HOY')
       expect(screen.queryByRole('button', { name: 'Crear usuario' })).not.toBeInTheDocument()
       unmount()
@@ -258,7 +257,7 @@ describe('vistas por rol', () => {
   })
 
   it('el administrador valida y crea un usuario', async () => {
-    const { user } = await renderApp({ role: 'admin', route: '/mas/usuarios' })
+    const { user } = await renderApp({ role: 'admin', route: '/usuarios' })
     await user.click(await screen.findByRole('tab', { name: 'Crear' }))
     await user.click(await screen.findByRole('button', { name: 'Crear usuario' }))
     expect(await screen.findByText('Escriba el nombre completo.')).toBeInTheDocument()
@@ -307,7 +306,7 @@ describe('vistas por rol', () => {
   })
 
   it('el administrador ve los perfiles, abre uno y ve sus fincas', async () => {
-    const { user } = await renderApp({ role: 'admin', route: '/mas/usuarios' })
+    const { user } = await renderApp({ role: 'admin', route: '/usuarios' })
     await user.click(await screen.findByText('Hernando Gómez Restrepo'))
     expect(await screen.findByText('Su movimiento')).toBeInTheDocument()
     expect(screen.getByText('Finca La Esperanza')).toBeInTheDocument()
@@ -315,7 +314,7 @@ describe('vistas por rol', () => {
   })
 
   it('el administrador filtra los perfiles por rol', async () => {
-    const { user, backend } = await renderApp({ role: 'admin', route: '/mas/usuarios' })
+    const { user, backend } = await renderApp({ role: 'admin', route: '/usuarios' })
     await ready('Hernando Gómez Restrepo')
     const antes = backend.calls.filter((c) => c === 'GET usuarios').length
     await user.click(screen.getByRole('tab', { name: 'Contador' }))
@@ -324,7 +323,7 @@ describe('vistas por rol', () => {
 
   it('los demás perfiles no ven los perfiles de usuarios', async () => {
     for (const role of ['agricultor', 'contador', 'experto']) {
-      const { unmount } = await renderApp({ role, route: '/mas/usuarios/u-agricultor-1' })
+      const { unmount } = await renderApp({ role, route: '/usuarios/u-agricultor-1' })
       await ready('RESUMEN DE HOY')
       expect(screen.queryByText('Su movimiento')).not.toBeInTheDocument()
       unmount()
@@ -332,11 +331,11 @@ describe('vistas por rol', () => {
   })
 
   it('solo el administrador entra al panel de control', async () => {
-    const admin = await renderApp({ role: 'admin', route: '/mas/panel' })
+    const admin = await renderApp({ role: 'admin', route: '/panel' })
     expect(await screen.findByText('Usuarios por rol')).toBeInTheDocument()
     admin.unmount()
     for (const role of ['agricultor', 'contador', 'experto']) {
-      const { unmount } = await renderApp({ role, route: '/mas/panel' })
+      const { unmount } = await renderApp({ role, route: '/panel' })
       await ready('RESUMEN DE HOY')
       expect(screen.queryByText('Usuarios por rol')).not.toBeInTheDocument()
       unmount()
@@ -348,7 +347,7 @@ describe('vistas por rol', () => {
     const pedir = async (ruta) => (await backend.fetch(`http://localhost:8000/${ruta}`, { headers: { Authorization: 'Bearer token-admin' } })).json()
     const resumen = await pedir('estadisticas/resumen')
     const costos = await pedir('estadisticas/costos')
-    await renderApp({ role: 'admin', route: '/mas/panel', backend })
+    await renderApp({ role: 'admin', route: '/panel', backend })
     expect(await screen.findByText(formatCop(resumen.gastos))).toBeInTheDocument()
     expect(screen.getByText(formatCop(resumen.utilidad))).toBeInTheDocument()
     expect(screen.getByText(plural(resumen.usuarios_activos, 'activo', 'activos'))).toBeInTheDocument()
@@ -358,7 +357,7 @@ describe('vistas por rol', () => {
   it('el panel cambia de pestaña y muestra gastos por categoría y por hectárea', async () => {
     const backend = createFakeBackend()
     const costos = await (await backend.fetch('http://localhost:8000/estadisticas/costos', { headers: { Authorization: 'Bearer token-admin' } })).json()
-    const { user } = await renderApp({ role: 'admin', route: '/mas/panel', backend })
+    const { user } = await renderApp({ role: 'admin', route: '/panel', backend })
     await user.click(await screen.findByRole('tab', { name: 'Costos' }))
     expect(await screen.findByText('Gasto por hectárea')).toBeInTheDocument()
     expect(screen.getByText(formatCop(costos.gasto_por_ha))).toBeInTheDocument()
@@ -368,7 +367,7 @@ describe('vistas por rol', () => {
   })
 
   it('el crecimiento cambia de métrica', async () => {
-    const { user } = await renderApp({ role: 'admin', route: '/mas/panel' })
+    const { user } = await renderApp({ role: 'admin', route: '/panel' })
     await screen.findByText('Crecimiento')
     await user.click(screen.getByRole('tab', { name: 'Ingresos' }))
     expect((await screen.findAllByRole('progressbar')).length).toBeGreaterThan(0)
@@ -378,7 +377,7 @@ describe('vistas por rol', () => {
     const backend = createFakeBackend()
     const pedir = async (ruta) => (await backend.fetch(`http://localhost:8000/${ruta}`, { headers: { Authorization: 'Bearer token-admin' } })).json()
     const cultivos = await pedir('estadisticas/cultivos')
-    const { user } = await renderApp({ role: 'admin', route: '/mas/panel', backend })
+    const { user } = await renderApp({ role: 'admin', route: '/panel', backend })
     await user.click(await screen.findByRole('tab', { name: 'Cultivos' }))
     expect(await screen.findByText('Cultivos más registrados')).toBeInTheDocument()
     for (const cultivo of cultivos) {
@@ -392,7 +391,7 @@ describe('vistas por rol', () => {
   it('la pestaña de zonas nombra cada departamento y cambia a municipios', async () => {
     const backend = createFakeBackend()
     const zonas = await (await backend.fetch('http://localhost:8000/estadisticas/zonas', { headers: { Authorization: 'Bearer token-admin' } })).json()
-    const { user } = await renderApp({ role: 'admin', route: '/mas/panel', backend })
+    const { user } = await renderApp({ role: 'admin', route: '/panel', backend })
     await user.click(await screen.findByRole('tab', { name: 'Zonas' }))
     for (const zona of zonas) {
       expect((await screen.findAllByText(zoneName(zona.zona))).length).toBeGreaterThanOrEqual(2)
@@ -411,7 +410,7 @@ describe('vistas por rol', () => {
       return original(input, init)
     }
     const cosechas = await (await original('http://localhost:8000/estadisticas/produccion', { headers: { Authorization: 'Bearer token-admin' } })).json()
-    const { user } = await renderApp({ role: 'admin', route: '/mas/panel', backend })
+    const { user } = await renderApp({ role: 'admin', route: '/panel', backend })
     await user.click(await screen.findByRole('tab', { name: 'Producción' }))
     for (const c of cosechas.items) {
       expect(await screen.findByText(`${c.cultivo} · ${formatNumber(c.cantidad, 1)} ${c.unidad}`)).toBeInTheDocument()
@@ -433,7 +432,7 @@ describe('vistas por rol', () => {
       return original(input, init)
     }
     const siembras = await (await original('http://localhost:8000/estadisticas/siembras', { headers: { Authorization: 'Bearer token-admin' } })).json()
-    const { user } = await renderApp({ role: 'admin', route: '/mas/panel', backend })
+    const { user } = await renderApp({ role: 'admin', route: '/panel', backend })
     await user.click(await screen.findByRole('tab', { name: 'Siembras' }))
     expect(await screen.findByText(plural(siembras.total, 'siembra', 'siembras'))).toBeInTheDocument()
     for (const s of siembras.items) {
@@ -446,7 +445,7 @@ describe('vistas por rol', () => {
   it('la pestaña de productores ordena a quien más cosechas registró', async () => {
     const backend = createFakeBackend()
     const productores = await (await backend.fetch('http://localhost:8000/estadisticas/productores', { headers: { Authorization: 'Bearer token-admin' } })).json()
-    const { user } = await renderApp({ role: 'admin', route: '/mas/panel', backend })
+    const { user } = await renderApp({ role: 'admin', route: '/panel', backend })
     await user.click(await screen.findByRole('tab', { name: 'Productores' }))
     expect(await screen.findByText('Quién produce más')).toBeInTheDocument()
     for (const p of productores) {
@@ -475,7 +474,7 @@ describe('vistas por rol', () => {
       }
       return original(input, init)
     }
-    const { user } = await renderApp({ role: 'admin', route: '/mas/panel', backend })
+    const { user } = await renderApp({ role: 'admin', route: '/panel', backend })
     await user.click(await screen.findByRole('tab', { name: 'Productores' }))
     expect(await screen.findByText(/^1 cosecha · .* · 1 finca/)).toBeInTheDocument()
   })
@@ -484,9 +483,55 @@ describe('vistas por rol', () => {
     const backend = createFakeBackend()
     const detalle = await (await backend.fetch('http://localhost:8000/usuarios/u-agricultor-1', { headers: { Authorization: 'Bearer token-admin' } })).json()
     const finca = detalle.detalle_fincas[0]
-    const { user } = await renderApp({ role: 'admin', route: '/mas/usuarios', backend })
+    const { user } = await renderApp({ role: 'admin', route: '/usuarios', backend })
     await user.click(await screen.findByText(detalle.nombre))
     const esperado = `${plural(finca.siembras, 'siembra', 'siembras')} · ${plural(finca.cosechas, 'cosecha', 'cosechas')}`
     expect(await screen.findByText(new RegExp(esperado))).toBeInTheDocument()
+  })
+
+  it('el administrador entra directo al panel y solo tiene pestañas administrativas', async () => {
+    await renderApp({ role: 'admin' })
+    expect(await screen.findByText('Usuarios por rol')).toBeInTheDocument()
+    for (const tab of ['Panel', 'Usuarios', 'Más']) expect(nav().getByText(tab)).toBeInTheDocument()
+    for (const tab of ['Inicio', 'Producción', 'Dinero']) expect(nav().queryByText(tab)).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Registrar' })).not.toBeInTheDocument()
+  })
+
+  it('el administrador no tiene selector de finca y /inicio lo lleva al panel', async () => {
+    await renderApp({ role: 'admin', route: '/inicio', width: 1280 })
+    expect(await screen.findByText('Usuarios por rol')).toBeInTheDocument()
+    expect(screen.queryByText(/Finca activa/)).not.toBeInTheDocument()
+  })
+
+  it('el menú Más del administrador solo muestra administración, contenido y cuenta', async () => {
+    const { user } = await renderApp({ role: 'admin' })
+    await user.click(await within(await screen.findByRole('navigation', { name: 'Principal' })).findByText('Más'))
+    await ready('ADMINISTRACIÓN')
+    for (const item of ['Catálogo de cultivos', 'Revisión de conocimiento', 'Fuentes y alertas', 'Calidad del asistente', 'Biblioteca de conocimiento', 'Mi cuenta']) {
+      expect(screen.getByText(item), item).toBeInTheDocument()
+    }
+    for (const item of ['Mis fincas y lotes', 'Trabajadores', 'Pagos pendientes', 'Insumos e inventario', 'Procesos de transformación', 'Consultar', 'Mis animales', 'Vivero', 'Reportes', 'Eventos adversos']) {
+      expect(screen.queryByText(item), item).not.toBeInTheDocument()
+    }
+    expect(screen.queryByText('OPERACIÓN DE CAMPO')).not.toBeInTheDocument()
+  })
+
+  it('el administrador no puede abrir las pantallas de un usuario', async () => {
+    const rutas = ['/produccion', '/dinero', '/mas/fincas', '/mas/trabajadores', '/mas/pagos', '/mas/inventario', '/mas/procesos', '/mas/eventos', '/mas/vivero', '/mas/animales', '/mas/reportes', '/mas/asistente', '/produccion/labores/act-1']
+    for (const route of rutas) {
+      const { unmount } = await renderApp({ role: 'admin', route })
+      expect(await screen.findByText('Usuarios por rol'), route).toBeInTheDocument()
+      unmount()
+    }
+  })
+
+  it('el agricultor sigue viendo el menú de operación de campo', async () => {
+    const { user } = await renderApp({ role: 'agricultor' })
+    await ready('RESUMEN DE HOY')
+    await user.click(nav().getByText('Más'))
+    await ready('OPERACIÓN DE CAMPO')
+    expect(screen.getByText('Mis fincas y lotes')).toBeInTheDocument()
+    expect(screen.queryByText('ADMINISTRACIÓN')).not.toBeInTheDocument()
+    expect(screen.queryByText('Fuentes y alertas')).not.toBeInTheDocument()
   })
 })

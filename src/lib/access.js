@@ -16,8 +16,9 @@ export function createAccess(session) {
   const isAccountant = role === 'contador'
   const isExpert = role === 'experto'
 
-  const registersFieldWork = isAdmin || isFarmer
-  const registersMoney = isAdmin || isFarmer || isAccountant
+  const operates = !isAdmin
+  const registersFieldWork = isFarmer
+  const registersMoney = isFarmer || isAccountant
 
   return {
     role,
@@ -26,32 +27,33 @@ export function createAccess(session) {
     isFarmer,
     isAccountant,
     isExpert,
-    seesProduction: has('GET', '/siembras'),
-    managesProduction: has('POST', '/siembras'),
+    seesFarms: operates,
+    seesProduction: operates && has('GET', '/siembras'),
+    managesProduction: operates && has('POST', '/siembras'),
     managesCatalog: has('GET', '/cultivos'),
     managesAlerts: isAdmin,
     reviewsKnowledge: isAdmin || isExpert,
     seesAdminPanel: isAdmin,
     createsUsers: has('POST', '/usuarios'),
-    seesAssistant: isAdmin || isFarmer,
+    seesAssistant: isFarmer,
     seesAssistantQuality: isAdmin,
-    seesLivestock: isAdmin || isFarmer,
-    managesLivestock: isAdmin || isFarmer,
-    seesNursery: has('GET', '/propagacion'),
-    seesReports: isAdmin || isFarmer || isAccountant,
-    seesRisks: has('GET', '/eventos-adversos'),
-    seesMoney: isAdmin || isFarmer || isAccountant,
+    seesLivestock: isFarmer,
+    managesLivestock: isFarmer,
+    seesNursery: operates && has('GET', '/propagacion'),
+    seesReports: isFarmer || isAccountant,
+    seesRisks: operates && has('GET', '/eventos-adversos'),
+    seesMoney: isFarmer || isAccountant,
     registersMoney,
-    seesProfit: isAdmin || isAccountant,
-    cancelsMoney: isAdmin || isAccountant,
-    seesWorkers: isAdmin || isFarmer || isAccountant,
-    seesPayments: has('GET', '/fincas/{finca_id}/jornales'),
-    paysWorkers: isAdmin || isAccountant,
-    seesInventory: has('GET', '/fincas/{finca_id}/insumos'),
-    seesProcesses: has('GET', '/fincas/{finca_id}/procesos'),
-    managesInventory: isAdmin || isFarmer,
-    managesWorkers: isAdmin || isFarmer,
-    createsFarms: isAdmin || isFarmer,
+    seesProfit: isAccountant,
+    cancelsMoney: isAccountant,
+    seesWorkers: isFarmer || isAccountant,
+    seesPayments: operates && has('GET', '/fincas/{finca_id}/jornales'),
+    paysWorkers: isAccountant,
+    seesInventory: operates && has('GET', '/fincas/{finca_id}/insumos'),
+    seesProcesses: operates && has('GET', '/fincas/{finca_id}/procesos'),
+    managesInventory: isFarmer,
+    managesWorkers: isFarmer,
+    createsFarms: isFarmer,
     registersFieldWork,
     canQuickRegister: registersFieldWork || registersMoney,
   }

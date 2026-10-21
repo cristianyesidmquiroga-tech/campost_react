@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
-import { Bell, CircleUserRound, Home, Leaf, Menu, Plus, Sprout, Wallet } from 'lucide-react'
+import { Bell, CircleUserRound, Home, LayoutDashboard, Leaf, Menu, Plus, Sprout, Users, Wallet } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
 import { useApp } from '../../context/AppContext'
 import { useWide } from '../../hooks/useMedia'
@@ -9,6 +9,13 @@ import { FarmSelector } from './FarmSelector'
 import { Fab } from './Fab'
 
 function destinations(access) {
+  if (access.isAdmin) {
+    return [
+      { to: '/panel', label: 'Panel', icon: LayoutDashboard },
+      { to: '/usuarios', label: 'Usuarios', icon: Users },
+      { to: '/mas', label: 'Más', icon: Menu },
+    ]
+  }
   return [
     { to: '/inicio', label: 'Inicio', icon: Home },
     access.seesProduction && { to: '/produccion', label: 'Producción', icon: Sprout },
@@ -30,9 +37,10 @@ function Brand() {
 
 function TopBar({ wide }) {
   const navigate = useNavigate()
+  const { access } = useAuth()
   return (
     <header className="topbar">
-      {wide ? (
+      {wide && !access.isAdmin ? (
         <div className="topbar__farm">
           <FarmSelector compact />
         </div>
@@ -111,7 +119,7 @@ export function AppShell() {
       {wide && <Sidebar items={items} />}
       <div className="main">
         {isTab && <TopBar wide={wide} />}
-        {isDetail && wide && (
+        {isDetail && wide && !access.isAdmin && (
           <header className="topbar">
             <div className="topbar__farm"><FarmSelector compact /></div>
           </header>

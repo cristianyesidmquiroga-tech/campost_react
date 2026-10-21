@@ -41,7 +41,7 @@ export function UserList() {
                 {page.items.map((u) => (
                   <ListRow
                     key={u.id}
-                    to={`/mas/usuarios/${u.id}`}
+                    to={`/usuarios/${u.id}`}
                     icon={Users}
                     title={u.name}
                     titleLines={2}

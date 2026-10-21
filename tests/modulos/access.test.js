@@ -5,12 +5,19 @@ const session = (role, permissions = []) => ({ role, permissions: permissions.ma
 const production = [['GET', '/siembras'], ['POST', '/siembras']]
 
 describe('acceso por rol', () => {
-  it('el administrador gestiona todo', () => {
+  it('el administrador solo tiene lo administrativo', () => {
     const access = createAccess(session('admin', [...production, ['GET', '/cultivos'], ['POST', '/usuarios']]))
-    expect(access.seesProduction).toBe(true)
-    expect(access.managesProduction).toBe(true)
-    expect(access.seesProfit).toBe(true)
-    expect(access.cancelsMoney).toBe(true)
+    const administrativo = ['seesAdminPanel', 'createsUsers', 'managesCatalog', 'reviewsKnowledge', 'managesAlerts', 'seesAssistantQuality']
+    administrativo.forEach((flag) => expect(access[flag], flag).toBe(true))
+    const deUsuario = ['seesFarms', 'seesProduction', 'managesProduction', 'seesMoney', 'registersMoney', 'seesProfit', 'cancelsMoney', 'seesWorkers', 'managesWorkers', 'seesPayments', 'paysWorkers', 'seesInventory', 'managesInventory', 'seesProcesses', 'seesRisks', 'seesReports', 'seesNursery', 'seesLivestock', 'seesAssistant', 'createsFarms', 'registersFieldWork', 'canQuickRegister']
+    deUsuario.forEach((flag) => expect(access[flag], flag).toBe(false))
+  })
+
+  it('ningún otro rol ve lo administrativo', () => {
+    for (const role of ['agricultor', 'contador', 'experto']) {
+      const access = createAccess(session(role, [['GET', '/siembras']]))
+      expect(access.seesAdminPanel || access.createsUsers || access.managesAlerts || access.seesAssistantQuality, role).toBe(false)
+    }
   })
 
   it('el agricultor registra pero no ve utilidad ni anula', () => {
