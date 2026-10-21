@@ -455,4 +455,14 @@ describe('vistas por rol', () => {
     const cosechas = productores.map((p) => p.cosechas)
     expect(cosechas).toEqual([...cosechas].sort((a, b) => b - a))
   })
+
+  it('la barra del vivero refleja las plantas listas sobre las puestas', async () => {
+    const backend = createFakeBackend()
+    const lotes = await (await backend.fetch('http://localhost:8000/propagacion', { headers: { Authorization: 'Bearer token-agricultor' } })).json()
+    await renderApp({ role: 'agricultor', route: '/mas/vivero', backend })
+    const barra = await screen.findByRole('progressbar')
+    const lote = lotes.items[0]
+    expect(Number(barra.getAttribute('aria-valuenow'))).toBe(Math.round((lote.listas / lote.puestas) * 100))
+    expect(Number(barra.getAttribute('aria-valuenow'))).toBeLessThan(100)
+  })
 })
