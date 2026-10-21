@@ -1,4 +1,4 @@
-import { BarChart3, BookCheck, Rss, Beef, UserCog, MessageCircleQuestion, BookOpen, Bell, Boxes, Cog, GraduationCap, Leaf, HandCoins, LogOut, Map as MapIcon, Shield, Sprout, TriangleAlert, Users } from 'lucide-react'
+import { BarChart3, BookCheck, LayoutDashboard, Rss, Beef, UserCog, MessageCircleQuestion, BookOpen, Bell, Boxes, Cog, GraduationCap, Leaf, HandCoins, LogOut, Map as MapIcon, Shield, Sprout, TriangleAlert, Users } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
 import { useConfirm } from '../../hooks/useConfirm'
 import { Button, Card, ListRow, RowGroup, SectionTitle, StatusPill } from '../../components/ui'
@@ -38,6 +38,7 @@ export function MorePage() {
         {access.seesLivestock && <ListRow to="/mas/animales" icon={Beef} title="Mis animales" subtitle="Lotes, animales y especies" />}
         {access.seesNursery && <ListRow to="/mas/vivero" icon={Leaf} title="Vivero" subtitle="Lotes de plantas por germinar y trasplantar" />}
         {access.managesCatalog && <ListRow to="/produccion/cultivos" icon={Sprout} title="Catálogo de cultivos" subtitle="Perfiles que gobiernan el ciclo" />}
+        {access.seesAdminPanel && <ListRow to="/mas/panel" icon={LayoutDashboard} title="Panel de control" subtitle="Estadísticas de toda la aplicación" />}
         {access.seesReports && <ListRow to="/mas/reportes" icon={BarChart3} title="Reportes" subtitle="Índices, tiempos y eventos" />}
         {access.seesRisks && <ListRow to="/mas/eventos" icon={TriangleAlert} title="Eventos adversos" subtitle="Heladas, plagas y lluvias" />}
       </RowGroup>

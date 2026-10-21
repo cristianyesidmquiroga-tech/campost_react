@@ -27,6 +27,7 @@ import { EventsPage } from './pages/risks/EventsPage'
 import { EventDetailPage } from './pages/risks/EventDetailPage'
 import { AlertSourcesPage } from './pages/content/AlertSourcesPage'
 import { KnowledgeReviewPage } from './pages/content/KnowledgeReviewPage'
+import { PanelPage } from './pages/admin/PanelPage'
 import { UserDetailPage } from './pages/account/UserDetailPage'
 import { UsersPage } from './pages/account/UsersPage'
 import { ActivityDetailPage } from './pages/production/ActivityDetailPage'
@@ -108,6 +109,7 @@ function Authenticated() {
           <Route path="mas/conocimiento/revision" element={<Guarded allowed={access.reviewsKnowledge}><KnowledgeReviewPage /></Guarded>} />
           <Route path="mas/conocimiento" element={<KnowledgePage />} />
           <Route path="mas/conocimiento/:id" element={<KnowledgeDetailPage />} />
+          <Route path="mas/panel" element={<Guarded allowed={access.seesAdminPanel}><PanelPage /></Guarded>} />
           <Route path="mas/usuarios" element={<Guarded allowed={access.createsUsers}><UsersPage /></Guarded>} />
           <Route path="mas/usuarios/:id" element={<Guarded allowed={access.createsUsers}><UserDetailPage /></Guarded>} />
           <Route path="mas/cuenta" element={<AccountPage />} />

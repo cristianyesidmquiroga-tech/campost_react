@@ -1,6 +1,7 @@
 import { screen, within } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
-import { PLANTING_ID } from '../../src/dev/fakeApi'
+import { PLANTING_ID, createFakeBackend } from '../../src/dev/fakeApi'
+import { formatCop, formatNumber } from '../../src/lib/format'
 import { gone, ready, renderApp } from '../support/harness'
 
 const nav = () => within(screen.getByRole('navigation', { name: 'Principal' }))
@@ -327,5 +328,48 @@ describe('vistas por rol', () => {
       expect(screen.queryByText('Su movimiento')).not.toBeInTheDocument()
       unmount()
     }
+  })
+
+  it('solo el administrador entra al panel de control', async () => {
+    const admin = await renderApp({ role: 'admin', route: '/mas/panel' })
+    expect(await screen.findByText('Usuarios por rol')).toBeInTheDocument()
+    admin.unmount()
+    for (const role of ['agricultor', 'contador', 'experto']) {
+      const { unmount } = await renderApp({ role, route: '/mas/panel' })
+      await ready('RESUMEN DE HOY')
+      expect(screen.queryByText('Usuarios por rol')).not.toBeInTheDocument()
+      unmount()
+    }
+  })
+
+  it('el panel muestra los totales que entrega la API', async () => {
+    const backend = createFakeBackend()
+    const pedir = async (ruta) => (await backend.fetch(`http://localhost:8000/${ruta}`, { headers: { Authorization: 'Bearer token-admin' } })).json()
+    const resumen = await pedir('estadisticas/resumen')
+    const costos = await pedir('estadisticas/costos')
+    await renderApp({ role: 'admin', route: '/mas/panel', backend })
+    expect(await screen.findByText(formatCop(resumen.gastos))).toBeInTheDocument()
+    expect(screen.getByText(formatCop(resumen.utilidad))).toBeInTheDocument()
+    expect(screen.getByText(`${formatNumber(resumen.usuarios_activos)} activos`)).toBeInTheDocument()
+    expect(resumen.gastos).toBe(costos.gastos)
+  })
+
+  it('el panel cambia de pestaña y muestra gastos por categoría y por hectárea', async () => {
+    const backend = createFakeBackend()
+    const costos = await (await backend.fetch('http://localhost:8000/estadisticas/costos', { headers: { Authorization: 'Bearer token-admin' } })).json()
+    const { user } = await renderApp({ role: 'admin', route: '/mas/panel', backend })
+    await user.click(await screen.findByRole('tab', { name: 'Costos' }))
+    expect(await screen.findByText('Gasto por hectárea')).toBeInTheDocument()
+    expect(screen.getByText(formatCop(costos.gasto_por_ha))).toBeInTheDocument()
+    for (const categoria of costos.gastos_por_categoria) {
+      expect(screen.getByText(`${categoria.categoria} (${categoria.registros})`)).toBeInTheDocument()
+    }
+  })
+
+  it('el crecimiento cambia de métrica', async () => {
+    const { user } = await renderApp({ role: 'admin', route: '/mas/panel' })
+    await screen.findByText('Crecimiento')
+    await user.click(screen.getByRole('tab', { name: 'Ingresos' }))
+    expect((await screen.findAllByRole('progressbar')).length).toBeGreaterThan(0)
   })
 })
