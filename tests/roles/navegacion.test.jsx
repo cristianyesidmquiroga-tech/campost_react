@@ -1,5 +1,5 @@
 import { screen, within } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { PLANTING_ID } from '../../src/dev/fakeApi'
 import { gone, ready, renderApp } from '../support/harness'
 
@@ -244,6 +244,7 @@ describe('vistas por rol', () => {
 
   it('solo el administrador crea usuarios', async () => {
     const admin = await renderApp({ role: 'admin', route: '/mas/usuarios' })
+    await admin.user.click(await screen.findByRole('tab', { name: 'Crear' }))
     expect(await screen.findByRole('button', { name: 'Crear usuario' })).toBeInTheDocument()
     admin.unmount()
     for (const role of ['agricultor', 'contador', 'experto']) {
@@ -256,6 +257,7 @@ describe('vistas por rol', () => {
 
   it('el administrador valida y crea un usuario', async () => {
     const { user } = await renderApp({ role: 'admin', route: '/mas/usuarios' })
+    await user.click(await screen.findByRole('tab', { name: 'Crear' }))
     await user.click(await screen.findByRole('button', { name: 'Crear usuario' }))
     expect(await screen.findByText('Escriba el nombre completo.')).toBeInTheDocument()
     expect(screen.getByText('Escriba un correo válido.')).toBeInTheDocument()
@@ -300,5 +302,30 @@ describe('vistas por rol', () => {
     await user.click(screen.getByRole('button', { name: 'Registrar fuente' }))
     await user.click(await screen.findByRole('button', { name: 'Sincronizar' }))
     expect(await screen.findByText('1 alertas encontradas en IDEAM.')).toBeInTheDocument()
+  })
+
+  it('el administrador ve los perfiles, abre uno y ve sus fincas', async () => {
+    const { user } = await renderApp({ role: 'admin', route: '/mas/usuarios' })
+    await user.click(await screen.findByText('Hernando Gómez Restrepo'))
+    expect(await screen.findByText('Su movimiento')).toBeInTheDocument()
+    expect(screen.getByText('Finca La Esperanza')).toBeInTheDocument()
+    expect(screen.getByText(/Antioquia/)).toBeInTheDocument()
+  })
+
+  it('el administrador filtra los perfiles por rol', async () => {
+    const { user, backend } = await renderApp({ role: 'admin', route: '/mas/usuarios' })
+    await ready('Hernando Gómez Restrepo')
+    const antes = backend.calls.filter((c) => c === 'GET usuarios').length
+    await user.click(screen.getByRole('tab', { name: 'Contador' }))
+    await vi.waitFor(() => expect(backend.calls.filter((c) => c === 'GET usuarios').length).toBeGreaterThan(antes))
+  })
+
+  it('los demás perfiles no ven los perfiles de usuarios', async () => {
+    for (const role of ['agricultor', 'contador', 'experto']) {
+      const { unmount } = await renderApp({ role, route: '/mas/usuarios/u-agricultor-1' })
+      await ready('RESUMEN DE HOY')
+      expect(screen.queryByText('Su movimiento')).not.toBeInTheDocument()
+      unmount()
+    }
   })
 })
