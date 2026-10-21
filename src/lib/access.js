@@ -31,6 +31,7 @@ export function createAccess(session) {
     managesCatalog: has('GET', '/cultivos'),
     managesAlerts: isAdmin,
     reviewsKnowledge: isAdmin || isExpert,
+    seesAdminPanel: isAdmin,
     createsUsers: has('POST', '/usuarios'),
     seesAssistant: isAdmin || isFarmer,
     seesAssistantQuality: isAdmin,
