@@ -4,7 +4,7 @@ import { useAsync } from '../../hooks/useAsync'
 import { adminPlantings } from '../../services/admin'
 import { Card, EmptyState, FilterBar, ListRow, Loadable, RowGroup, SkeletonList, StatusPill } from '../../components/ui'
 import { zoneName } from '../../lib/dane'
-import { formatDate, formatHa, formatNumber } from '../../lib/format'
+import { formatDate, formatHa, plural } from '../../lib/format'
 import { plantingStatusLabel, plantingStatusTone } from '../../lib/labels'
 import { CropFilter, ZoneFilter } from './Filters'
 import { Pager } from './Pager'
@@ -36,7 +36,7 @@ export function PlantingsTab() {
             <Card><EmptyState icon={Sprout} title="Sin siembras" message="No hay siembras que coincidan con los filtros." /></Card>
           ) : (
             <>
-              <p className="body-sm">{formatNumber(page.total)} siembras</p>
+              <p className="body-sm">{plural(page.total, 'siembra', 'siembras')}</p>
               <RowGroup>
                 {page.items.map((s) => (
                   <ListRow

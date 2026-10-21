@@ -7,7 +7,7 @@ import { useToast } from '../../context/ToastContext'
 import { useAsync } from '../../hooks/useAsync'
 import { useConfirm } from '../../hooks/useConfirm'
 import { cancelActivity, listActivities, updateActivity } from '../../services/activities'
-import { Button, Card, DateField, Field, FormSheet, InfoList, InfoRow, Loadable, SectionTitle, SkeletonList, StatusPill } from '../../components/ui'
+import { Button, DateField, Field, FormSheet, InfoList, InfoRow, Loadable, SectionTitle, SkeletonList, StatusPill } from '../../components/ui'
 import { DetailPage } from '../../components/layout/Page'
 import { formatDate, formatHa, humanize, parseNumber } from '../../lib/format'
 import { phaseLabel } from '../../lib/labels'
@@ -69,7 +69,7 @@ export function ActivityDetailPage() {
           const cancelled = activity.status === 'anulada'
           return (
             <>
-              <Card>
+              <div className="stack gap-12">
                 <div className="row gap-12">
                   <span className="grow"><h2 className="headline-md">{activity.name}</h2></span>
                   <StatusPill tone={cancelled ? 'danger' : 'info'}>{humanize(activity.status)}</StatusPill>
@@ -81,7 +81,7 @@ export function ActivityDetailPage() {
                   <InfoRow icon={Ruler} label="Área trabajada" value={formatHa(activity.areaHa)} />
                   <InfoRow icon={Hammer} label="Ciclo" value={activity.cycleId.slice(0, 8)} mono />
                 </InfoList>
-              </Card>
+              </div>
               {access.registersFieldWork && !cancelled && (
                 <>
                   <SectionTitle>Acciones</SectionTitle>

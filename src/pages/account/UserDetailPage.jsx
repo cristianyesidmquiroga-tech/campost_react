@@ -18,7 +18,7 @@ export function UserDetailPage() {
           if (!user) return <Navigate to="/mas/usuarios" replace />
           return (
             <>
-              <Card>
+              <div className="stack gap-12">
                 <div className="row gap-12">
                   <span className="grow"><h2 className="headline-md">{user.name}</h2></span>
                   <StatusPill tone={user.active ? 'ok' : 'neutral'}>{user.active ? ROLE_LABELS[user.role] ?? user.role : 'Inactivo'}</StatusPill>
@@ -29,7 +29,7 @@ export function UserDetailPage() {
                   <InfoRow icon={Clock} label="Último acceso" value={user.lastAccess ? formatDate(user.lastAccess) : 'Nunca ha entrado'} />
                   {user.blocked && <InfoRow label="Estado" value="Bloqueado por intentos fallidos" />}
                 </InfoList>
-              </Card>
+              </div>
               <SectionTitle>Su movimiento</SectionTitle>
               <KpiGrid cols={2} colsWide={4}>
                 <KpiTile label="Fincas" value={formatNumber(user.farms)} icon={MapPin} caption="asignadas" />

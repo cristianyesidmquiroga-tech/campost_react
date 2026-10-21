@@ -2,7 +2,7 @@ import { screen, within } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 import { PLANTING_ID, createFakeBackend } from '../../src/dev/fakeApi'
 import { zoneName } from '../../src/lib/dane'
-import { formatCop, formatNumber } from '../../src/lib/format'
+import { formatCop, formatNumber, plural } from '../../src/lib/format'
 import { gone, ready, renderApp } from '../support/harness'
 
 const nav = () => within(screen.getByRole('navigation', { name: 'Principal' }))
@@ -351,7 +351,7 @@ describe('vistas por rol', () => {
     await renderApp({ role: 'admin', route: '/mas/panel', backend })
     expect(await screen.findByText(formatCop(resumen.gastos))).toBeInTheDocument()
     expect(screen.getByText(formatCop(resumen.utilidad))).toBeInTheDocument()
-    expect(screen.getByText(`${formatNumber(resumen.usuarios_activos)} activos`)).toBeInTheDocument()
+    expect(screen.getByText(plural(resumen.usuarios_activos, 'activo', 'activos'))).toBeInTheDocument()
     expect(resumen.gastos).toBe(costos.gastos)
   })
 
@@ -416,7 +416,7 @@ describe('vistas por rol', () => {
     for (const c of cosechas.items) {
       expect(await screen.findByText(`${c.cultivo} · ${formatNumber(c.cantidad, 1)} ${c.unidad}`)).toBeInTheDocument()
     }
-    expect(screen.getByText(`${formatNumber(cosechas.total)} cosechas, de la más reciente a la más antigua`)).toBeInTheDocument()
+    expect(screen.getByText(`${plural(cosechas.total, 'cosecha', 'cosechas')}, de la más reciente a la más antigua`)).toBeInTheDocument()
     const cultivos = await (await original('http://localhost:8000/estadisticas/cultivos', { headers: { Authorization: 'Bearer token-admin' } })).json()
     await user.selectOptions(screen.getByLabelText('Cultivo'), cultivos[0].cultivo_id)
     await vi.waitFor(() => expect(urls.some((u) => u.includes('estadisticas/produccion') && u.includes(`cultivo_id=${cultivos[0].cultivo_id}`))).toBe(true))
@@ -435,7 +435,7 @@ describe('vistas por rol', () => {
     const siembras = await (await original('http://localhost:8000/estadisticas/siembras', { headers: { Authorization: 'Bearer token-admin' } })).json()
     const { user } = await renderApp({ role: 'admin', route: '/mas/panel', backend })
     await user.click(await screen.findByRole('tab', { name: 'Siembras' }))
-    expect(await screen.findByText(`${formatNumber(siembras.total)} siembras`)).toBeInTheDocument()
+    expect(await screen.findByText(plural(siembras.total, 'siembra', 'siembras'))).toBeInTheDocument()
     for (const s of siembras.items) {
       expect(screen.getByText(new RegExp(`${s.finca} · .* · ${s.agricultor}`))).toBeInTheDocument()
     }

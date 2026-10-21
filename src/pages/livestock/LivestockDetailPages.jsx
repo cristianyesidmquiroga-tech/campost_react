@@ -61,7 +61,7 @@ export function AnimalLotDetailPage() {
           const feeding = data.feeding.filter((f) => f.lotId === id)
           return (
             <>
-              <Card>
+              <div className="stack gap-12">
                 <h2 className="headline-md">{lot.name}</h2>
                 <InfoList>
                   <InfoRow label="Especie" value={speciesName(data, lot.speciesId)} icon={Beef} />
@@ -69,7 +69,7 @@ export function AnimalLotDetailPage() {
                   <InfoRow label="Ubicación" value={lot.location ?? 'Sin ubicación'} />
                   <InfoRow label="Costo de alimentación" value={formatCop(feeding.reduce((s, f) => s + f.cost, 0))} />
                 </InfoList>
-              </Card>
+              </div>
               {access.managesLivestock && (
                 <div className="row gap-8" style={{ margin: '12px 0', flexWrap: 'wrap' }}>
                   <Button onClick={() => setSheet('production')}>Registrar producción</Button>
@@ -116,7 +116,7 @@ export function AnimalDetailPage() {
           const lot = data.lots.find((l) => l.id === animal.lotId)
           return (
             <>
-              <Card>
+              <div className="stack gap-12">
                 <h2 className="headline-md">{animal.name ? `${animal.name} (${animal.tag})` : `Arete ${animal.tag}`}</h2>
                 <InfoList>
                   <InfoRow label="Especie" value={speciesName(data, animal.speciesId)} icon={Beef} />
@@ -126,7 +126,7 @@ export function AnimalDetailPage() {
                   <InfoRow label="Lote" value={lot?.name ?? 'Sin lote'} />
                   <InfoRow label="Estado" value={animal.status} />
                 </InfoList>
-              </Card>
+              </div>
               {access.managesLivestock && (
                 <div style={{ margin: '12px 0' }}>
                   <Button wide onClick={() => setCreating(true)}>Registrar evento</Button>
@@ -156,7 +156,7 @@ export function SpeciesDetailPage() {
           const animals = data.animals.filter((a) => a.speciesId === id)
           return (
             <>
-              <Card>
+              <div className="stack gap-12">
                 <h2 className="headline-md">{species.name}</h2>
                 <p className="body-sm">{species.description ?? 'Sin descripción'}</p>
                 <InfoList>
@@ -164,7 +164,7 @@ export function SpeciesDetailPage() {
                   <InfoRow label="Animales individuales" value={formatNumber(animals.length)} icon={Tag} />
                   <InfoRow label="Animales en lotes" value={formatNumber(lots.reduce((s, l) => s + l.quantity, 0))} />
                 </InfoList>
-              </Card>
+              </div>
               <SectionTitle>Lotes de esta especie</SectionTitle>
               {lots.length === 0 ? (
                 <Card><EmptyState icon={Layers} title="Sin lotes" message="Todavía no hay lotes de esta especie." /></Card>

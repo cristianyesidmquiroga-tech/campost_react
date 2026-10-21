@@ -4,7 +4,7 @@ import { useAsync } from '../../hooks/useAsync'
 import { adminZones } from '../../services/admin'
 import { Card, EmptyState, InfoList, InfoRow, Loadable, SectionTitle, SegmentedTabs, SkeletonList, StatusPill } from '../../components/ui'
 import { zoneName } from '../../lib/dane'
-import { formatCop, formatHa, formatNumber, formatUnits } from '../../lib/format'
+import { formatCop, formatHa, formatNumber, formatUnits, plural } from '../../lib/format'
 import { BarList } from './BarList'
 
 const LEVELS = ['departamento', 'municipio']
@@ -38,22 +38,22 @@ export function ZonesTab() {
               <SectionTitle>Detalle por zona</SectionTitle>
               <div className="stack gap-12">
                 {zones.map((z) => (
-                  <Card key={z.zone}>
+                  <div key={z.zone} className="stack gap-12">
                     <div className="row gap-12">
                       <span className="grow"><h3 className="headline-md clamp-2" style={{ fontSize: 18 }}>{zoneName(z.zone)}</h3></span>
                       <StatusPill tone={z.profit >= 0 ? 'ok' : 'danger'}>{`Utilidad ${formatCop(z.profit)}`}</StatusPill>
                     </div>
                     <InfoList>
-                      <InfoRow label="Fincas" value={`${formatNumber(z.farms)} de ${formatNumber(z.farmers)} agricultores`} />
+                      <InfoRow label="Fincas" value={`${plural(z.farms, 'finca', 'fincas')} de ${plural(z.farmers, 'agricultor', 'agricultores')}`} />
                       <InfoRow label="Área de fincas" value={formatHa(z.farmAreaHa)} />
-                      <InfoRow label="Siembras" value={`${formatNumber(z.plantings)} en ${formatHa(z.plantedHa)}`} />
+                      <InfoRow label="Siembras" value={`${plural(z.plantings, 'siembra', 'siembras')} en ${formatHa(z.plantedHa)}`} />
                       <InfoRow label="Cosechas" value={formatNumber(z.harvests)} />
                       <InfoRow label="Producción" value={formatUnits(z.production)} />
                       <InfoRow label="Gastos" value={formatCop(z.expenses)} />
                       <InfoRow label="Ingresos" value={formatCop(z.income)} />
                       <InfoRow label="Cultivos principales" value={z.topCrops.length ? z.topCrops.join(', ') : 'Sin siembras'} />
                     </InfoList>
-                  </Card>
+                  </div>
                 ))}
               </div>
             </>
