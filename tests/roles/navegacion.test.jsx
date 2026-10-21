@@ -1,6 +1,7 @@
 import { screen, within } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 import { PLANTING_ID, createFakeBackend } from '../../src/dev/fakeApi'
+import { zoneName } from '../../src/lib/dane'
 import { formatCop, formatNumber } from '../../src/lib/format'
 import { gone, ready, renderApp } from '../support/harness'
 
@@ -371,5 +372,33 @@ describe('vistas por rol', () => {
     await screen.findByText('Crecimiento')
     await user.click(screen.getByRole('tab', { name: 'Ingresos' }))
     expect((await screen.findAllByRole('progressbar')).length).toBeGreaterThan(0)
+  })
+
+  it('la pestaña de cultivos sigue el orden y los datos que entrega la API', async () => {
+    const backend = createFakeBackend()
+    const pedir = async (ruta) => (await backend.fetch(`http://localhost:8000/${ruta}`, { headers: { Authorization: 'Bearer token-admin' } })).json()
+    const cultivos = await pedir('estadisticas/cultivos')
+    const { user } = await renderApp({ role: 'admin', route: '/mas/panel', backend })
+    await user.click(await screen.findByRole('tab', { name: 'Cultivos' }))
+    expect(await screen.findByText('Cultivos más registrados')).toBeInTheDocument()
+    for (const cultivo of cultivos) {
+      expect((await screen.findAllByText(cultivo.cultivo)).length).toBeGreaterThanOrEqual(2)
+    }
+    const conCosecha = cultivos.find((c) => c.cosechas > 0)
+    expect(screen.getAllByText(`${formatNumber(conCosecha.dias_entre_cosechas, 1)} días`).length).toBeGreaterThan(0)
+    expect(screen.getAllByText('Sin cosechas').length).toBe(cultivos.filter((c) => c.cosechas === 0).length)
+  })
+
+  it('la pestaña de zonas nombra cada departamento y cambia a municipios', async () => {
+    const backend = createFakeBackend()
+    const zonas = await (await backend.fetch('http://localhost:8000/estadisticas/zonas', { headers: { Authorization: 'Bearer token-admin' } })).json()
+    const { user } = await renderApp({ role: 'admin', route: '/mas/panel', backend })
+    await user.click(await screen.findByRole('tab', { name: 'Zonas' }))
+    for (const zona of zonas) {
+      expect((await screen.findAllByText(zoneName(zona.zona))).length).toBeGreaterThanOrEqual(2)
+    }
+    const antes = backend.calls.filter((c) => c === 'GET estadisticas/zonas').length
+    await user.click(screen.getByRole('tab', { name: 'Municipios' }))
+    await vi.waitFor(() => expect(backend.calls.filter((c) => c === 'GET estadisticas/zonas').length).toBeGreaterThan(antes))
   })
 })

@@ -2,11 +2,15 @@ import { useState } from 'react'
 import { FilterBar } from '../../components/ui'
 import { DetailPage } from '../../components/layout/Page'
 import { CostsTab } from './CostsTab'
+import { CropsTab } from './CropsTab'
 import { SummaryTab } from './SummaryTab'
+import { ZonesTab } from './ZonesTab'
 
 const TABS = [
   { label: 'Resumen', Tab: SummaryTab },
+  { label: 'Cultivos', Tab: CropsTab },
   { label: 'Costos', Tab: CostsTab },
+  { label: 'Zonas', Tab: ZonesTab },
 ]
 
 export function PanelPage() {
