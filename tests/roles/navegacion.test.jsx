@@ -401,4 +401,58 @@ describe('vistas por rol', () => {
     await user.click(screen.getByRole('tab', { name: 'Municipios' }))
     await vi.waitFor(() => expect(backend.calls.filter((c) => c === 'GET estadisticas/zonas').length).toBeGreaterThan(antes))
   })
+
+  it('la pestaña de producción lista cada cosecha y manda los filtros a la API', async () => {
+    const backend = createFakeBackend()
+    const original = backend.fetch
+    const urls = []
+    backend.fetch = (input, init) => {
+      urls.push(String(input))
+      return original(input, init)
+    }
+    const cosechas = await (await original('http://localhost:8000/estadisticas/produccion', { headers: { Authorization: 'Bearer token-admin' } })).json()
+    const { user } = await renderApp({ role: 'admin', route: '/mas/panel', backend })
+    await user.click(await screen.findByRole('tab', { name: 'Producción' }))
+    for (const c of cosechas.items) {
+      expect(await screen.findByText(`${c.cultivo} · ${formatNumber(c.cantidad, 1)} ${c.unidad}`)).toBeInTheDocument()
+    }
+    expect(screen.getByText(`${formatNumber(cosechas.total)} cosechas, de la más reciente a la más antigua`)).toBeInTheDocument()
+    const cultivos = await (await original('http://localhost:8000/estadisticas/cultivos', { headers: { Authorization: 'Bearer token-admin' } })).json()
+    await user.selectOptions(screen.getByLabelText('Cultivo'), cultivos[0].cultivo_id)
+    await vi.waitFor(() => expect(urls.some((u) => u.includes('estadisticas/produccion') && u.includes(`cultivo_id=${cultivos[0].cultivo_id}`))).toBe(true))
+    await user.type(screen.getByLabelText('Desde'), '2026-09-01')
+    await vi.waitFor(() => expect(urls.some((u) => u.includes('desde=2026-09-01'))).toBe(true))
+  })
+
+  it('la pestaña de siembras filtra por estado y muestra zona y agricultor', async () => {
+    const backend = createFakeBackend()
+    const original = backend.fetch
+    const urls = []
+    backend.fetch = (input, init) => {
+      urls.push(String(input))
+      return original(input, init)
+    }
+    const siembras = await (await original('http://localhost:8000/estadisticas/siembras', { headers: { Authorization: 'Bearer token-admin' } })).json()
+    const { user } = await renderApp({ role: 'admin', route: '/mas/panel', backend })
+    await user.click(await screen.findByRole('tab', { name: 'Siembras' }))
+    expect(await screen.findByText(`${formatNumber(siembras.total)} siembras`)).toBeInTheDocument()
+    for (const s of siembras.items) {
+      expect(screen.getByText(new RegExp(`${s.finca} · .* · ${s.agricultor}`))).toBeInTheDocument()
+    }
+    await user.click(screen.getByRole('tab', { name: 'En curso' }))
+    await vi.waitFor(() => expect(urls.some((u) => u.includes('estadisticas/siembras') && u.includes('estado=en_curso'))).toBe(true))
+  })
+
+  it('la pestaña de productores ordena a quien más cosechas registró', async () => {
+    const backend = createFakeBackend()
+    const productores = await (await backend.fetch('http://localhost:8000/estadisticas/productores', { headers: { Authorization: 'Bearer token-admin' } })).json()
+    const { user } = await renderApp({ role: 'admin', route: '/mas/panel', backend })
+    await user.click(await screen.findByRole('tab', { name: 'Productores' }))
+    expect(await screen.findByText('Quién produce más')).toBeInTheDocument()
+    for (const p of productores) {
+      expect((await screen.findAllByText(p.nombre)).length).toBeGreaterThanOrEqual(1)
+    }
+    const cosechas = productores.map((p) => p.cosechas)
+    expect(cosechas).toEqual([...cosechas].sort((a, b) => b - a))
+  })
 })

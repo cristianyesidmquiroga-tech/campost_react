@@ -3,6 +3,9 @@ import { FilterBar } from '../../components/ui'
 import { DetailPage } from '../../components/layout/Page'
 import { CostsTab } from './CostsTab'
 import { CropsTab } from './CropsTab'
+import { HarvestsTab } from './HarvestsTab'
+import { PlantingsTab } from './PlantingsTab'
+import { ProducersTab } from './ProducersTab'
 import { SummaryTab } from './SummaryTab'
 import { ZonesTab } from './ZonesTab'
 
@@ -11,6 +14,9 @@ const TABS = [
   { label: 'Cultivos', Tab: CropsTab },
   { label: 'Costos', Tab: CostsTab },
   { label: 'Zonas', Tab: ZonesTab },
+  { label: 'Producción', Tab: HarvestsTab },
+  { label: 'Siembras', Tab: PlantingsTab },
+  { label: 'Productores', Tab: ProducersTab },
 ]
 
 export function PanelPage() {
