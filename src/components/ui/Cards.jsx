@@ -35,12 +35,20 @@ export function FitText({ children, className = '' }) {
   useLayoutEffect(() => {
     const outer = box.current
     const inner = text.current
-    if (!outer || !inner) return
-    inner.style.transform = ''
-    const available = outer.clientWidth
-    const needed = inner.scrollWidth
-    if (available > 0 && needed > available) inner.style.transform = `scale(${available / needed})`
-  })
+    if (!outer || !inner) return undefined
+    const fit = () => {
+      inner.style.transform = ''
+      const available = outer.clientWidth
+      const needed = inner.scrollWidth
+      if (available > 0 && needed > available) inner.style.transform = `scale(${available / needed})`
+    }
+    fit()
+    document.fonts?.ready.then(fit)
+    if (typeof ResizeObserver === 'undefined') return undefined
+    const observer = new ResizeObserver(fit)
+    observer.observe(outer)
+    return () => observer.disconnect()
+  }, [children])
   return (
     <span ref={box} className="fit-box">
       <span ref={text} className={`fit ${className}`}>{children}</span>
