@@ -16,6 +16,8 @@ export function formatNumber(value, decimals = 0) {
   return number < 0 ? `-${text}` : text
 }
 
+export const formatUnits = (list) => (list.length === 0 ? 'Sin cosechas' : list.map((u) => `${formatNumber(u.amount, 1)} ${u.unit}`).join(' · '))
+
 export function formatCop(value) {
   const number = asNumber(value)
   if (number === null) return '—'
