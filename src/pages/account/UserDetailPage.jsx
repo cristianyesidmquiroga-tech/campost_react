@@ -6,7 +6,7 @@ import { Card, EmptyState, InfoList, InfoRow, KpiGrid, KpiTile, ListRow, Loadabl
 import { DetailPage } from '../../components/layout/Page'
 import { ROLE_LABELS } from '../../lib/access'
 import { zoneName } from '../../lib/dane'
-import { formatCop, formatDate, formatHa, formatNumber } from '../../lib/format'
+import { formatCop, formatDate, formatHa, formatNumber, plural } from '../../lib/format'
 
 export function UserDetailPage() {
   const { id } = useParams()
@@ -48,7 +48,7 @@ export function UserDetailPage() {
                       icon={MapPin}
                       title={f.name}
                       titleLines={2}
-                      subtitle={`${zoneName(f.zone)} · ${formatHa(f.areaHa)} · ${formatNumber(f.plantings)} siembras · ${formatNumber(f.harvests)} cosechas · gastos ${formatCop(f.expenses)} · ingresos ${formatCop(f.income)}`}
+                      subtitle={`${zoneName(f.zone)} · ${formatHa(f.areaHa)} · ${plural(f.plantings, 'siembra', 'siembras')} · ${plural(f.harvests, 'cosecha', 'cosechas')} · gastos ${formatCop(f.expenses)} · ingresos ${formatCop(f.income)}`}
                     />
                   ))}
                 </RowGroup>
