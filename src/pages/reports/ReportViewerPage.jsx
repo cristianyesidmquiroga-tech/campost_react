@@ -20,7 +20,7 @@ function Indices({ farmId }) {
         ) : (
           <div className="stack gap-12">
             {plantings.map((p) => (
-              <Card key={p.plantingId}>
+              <div key={p.plantingId} className="stack gap-12">
                 <h3 className="headline-md">{p.crop}</h3>
                 <p className="body-sm">{p.countDate ? `Conteo del ${formatDate(p.countDate)}` : 'Sin conteos todavía'}</p>
                 <InfoList>
@@ -29,7 +29,7 @@ function Indices({ farmId }) {
                   ))}
                 </InfoList>
                 {p.notice && <Note icon={Info}>{p.notice}</Note>}
-              </Card>
+              </div>
             ))}
           </div>
         )
@@ -48,7 +48,7 @@ function Schedule({ farmId }) {
         ) : (
           <div className="stack gap-12">
             {cycles.map((c) => (
-              <Card key={c.cycleId}>
+              <div key={c.cycleId} className="stack gap-12">
                 <h3 className="headline-md">{c.crop}</h3>
                 <p className="body-sm">{cycleTypeLabel(c.type)}</p>
                 <InfoList>
@@ -58,7 +58,7 @@ function Schedule({ farmId }) {
                   <InfoRow label="Fin planeado" value={c.plannedEnd ? formatDate(c.plannedEnd) : 'Sin fecha'} />
                 </InfoList>
                 {c.notice && <Note icon={Info}>{c.notice}</Note>}
-              </Card>
+              </div>
             ))}
           </div>
         )
@@ -78,22 +78,18 @@ function Events({ farmId }) {
             <KpiTile label="Pérdida estimada" value={formatNumber(Math.round(report.loss))} prefix="$" icon={BarChart3} tone="danger" caption="pesos (COP)" />
           </KpiGrid>
           <SectionTitle>Por tipo</SectionTitle>
-          <Card>
-            <InfoList>
+          <InfoList>
               {report.byType.map((t) => (
                 <InfoRow key={t.type} label={`${humanize(t.type)} (${t.count})`} value={`$ ${formatNumber(Math.round(t.loss))}`} />
               ))}
               {report.byType.length === 0 && <InfoRow label="Sin eventos" value="-" />}
-            </InfoList>
-          </Card>
+          </InfoList>
           <SectionTitle>Por severidad</SectionTitle>
-          <Card>
-            <InfoList>
+          <InfoList>
               {report.bySeverity.map(([name, count]) => (
                 <InfoRow key={name} label={humanize(name)} value={formatNumber(count)} />
               ))}
-            </InfoList>
-          </Card>
+          </InfoList>
           {report.notice && <Note icon={Info}>{report.notice}</Note>}
         </>
       )}

@@ -4,7 +4,7 @@ import { useAsync } from '../../hooks/useAsync'
 import { listUsers } from '../../services/admin'
 import { Button, Card, EmptyState, Field, FilterBar, ListRow, Loadable, RowGroup, SkeletonList, StatusPill } from '../../components/ui'
 import { ROLE_LABELS } from '../../lib/access'
-import { formatDate, formatNumber } from '../../lib/format'
+import { formatDate, plural } from '../../lib/format'
 
 const ROLES = [null, 'admin', 'agricultor', 'contador', 'experto']
 const LABELS = ['Todos', ...ROLES.slice(1).map((r) => ROLE_LABELS[r])]
@@ -36,7 +36,7 @@ export function UserList() {
             <Card><EmptyState icon={Users} title="Sin usuarios" message="No hay perfiles que coincidan con la búsqueda." /></Card>
           ) : (
             <>
-              <p className="body-sm">{formatNumber(page.total)} perfiles</p>
+              <p className="body-sm">{plural(page.total, 'perfil', 'perfiles')}</p>
               <RowGroup>
                 {page.items.map((u) => (
                   <ListRow
@@ -45,7 +45,7 @@ export function UserList() {
                     icon={Users}
                     title={u.name}
                     titleLines={2}
-                    subtitle={`${u.email} · ${formatNumber(u.farms)} fincas · ${formatNumber(u.plantings)} siembras${u.lastAccess ? ` · último acceso ${formatDate(u.lastAccess)}` : ''}`}
+                    subtitle={`${u.email} · ${plural(u.farms, 'finca', 'fincas')} · ${plural(u.plantings, 'siembra', 'siembras')}${u.lastAccess ? ` · último acceso ${formatDate(u.lastAccess)}` : ''}`}
                     trailing={
                       <>
                         <StatusPill tone={u.active ? 'ok' : 'neutral'}>{u.active ? ROLE_LABELS[u.role] ?? u.role : 'Inactivo'}</StatusPill>

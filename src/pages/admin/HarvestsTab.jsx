@@ -4,7 +4,7 @@ import { useAsync } from '../../hooks/useAsync'
 import { adminHarvests } from '../../services/admin'
 import { Card, DateField, EmptyState, ListRow, Loadable, RowGroup, SkeletonList } from '../../components/ui'
 import { zoneName } from '../../lib/dane'
-import { formatDate, formatNumber } from '../../lib/format'
+import { formatDate, formatNumber, plural } from '../../lib/format'
 import { CropFilter, ZoneFilter } from './Filters'
 import { Pager } from './Pager'
 
@@ -34,7 +34,7 @@ export function HarvestsTab() {
             <Card><EmptyState icon={Wheat} title="Sin cosechas" message="No hay cosechas que coincidan con los filtros." /></Card>
           ) : (
             <>
-              <p className="body-sm">{formatNumber(page.total)} cosechas, de la más reciente a la más antigua</p>
+              <p className="body-sm">{plural(page.total, 'cosecha', 'cosechas')}, de la más reciente a la más antigua</p>
               <RowGroup>
                 {page.items.map((h) => (
                   <ListRow

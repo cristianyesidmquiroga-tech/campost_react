@@ -4,7 +4,7 @@ import { useAsync } from '../../hooks/useAsync'
 import { adminGrowth, adminSummary } from '../../services/admin'
 import { Card, FilterBar, KpiGrid, KpiTile, Loadable, RowGroup, ListRow, SectionTitle, SkeletonList } from '../../components/ui'
 import { ROLE_LABELS } from '../../lib/access'
-import { formatCop, formatHa, formatNumber, humanize } from '../../lib/format'
+import { formatCop, formatHa, formatNumber, humanize, plural } from '../../lib/format'
 import { BarList } from './BarList'
 
 const METRICS = [
@@ -41,17 +41,17 @@ export function SummaryTab() {
       {(s) => (
         <>
           <KpiGrid cols={2} colsWide={4}>
-            <KpiTile label="Usuarios" value={formatNumber(s.users)} icon={Users} caption={`${formatNumber(s.activeUsers)} activos`} />
+            <KpiTile label="Usuarios" value={formatNumber(s.users)} icon={Users} caption={plural(s.activeUsers, 'activo', 'activos')} />
             <KpiTile label="Fincas" value={formatNumber(s.farms)} icon={MapPin} caption={formatHa(s.farmAreaHa)} />
-            <KpiTile label="Siembras" value={formatNumber(s.plantings)} icon={Sprout} caption={`${formatNumber(s.openCycles)} ciclos abiertos`} />
-            <KpiTile label="Cosechas" value={formatNumber(s.harvests)} icon={Wheat} caption={`${formatNumber(s.closedCycles)} ciclos cerrados`} />
+            <KpiTile label="Siembras" value={formatNumber(s.plantings)} icon={Sprout} caption={plural(s.openCycles, 'ciclo abierto', 'ciclos abiertos')} />
+            <KpiTile label="Cosechas" value={formatNumber(s.harvests)} icon={Wheat} caption={plural(s.closedCycles, 'ciclo cerrado', 'ciclos cerrados')} />
           </KpiGrid>
           <SectionTitle>Dinero de toda la aplicación</SectionTitle>
           <KpiGrid cols={2} colsWide={4}>
             <KpiTile label="Gastos" value={formatCop(s.expenses)} icon={TrendingDown} tone="danger" caption="sin contar anulados" />
             <KpiTile label="Ingresos" value={formatCop(s.income)} icon={TrendingUp} caption="sin contar anulados" />
             <KpiTile label="Utilidad" value={formatCop(s.profit)} icon={Landmark} tone={s.profit >= 0 ? 'ok' : 'danger'} caption="ingresos menos gastos" />
-            <KpiTile label="Pérdida por eventos" value={formatCop(s.estimatedLoss)} icon={AlertTriangle} tone="warn" caption={`${formatNumber(s.events)} eventos adversos`} />
+            <KpiTile label="Pérdida por eventos" value={formatCop(s.estimatedLoss)} icon={AlertTriangle} tone="warn" caption={plural(s.events, 'evento adverso', 'eventos adversos')} />
           </KpiGrid>
           <SectionTitle>Usuarios por rol</SectionTitle>
           <RowGroup>
