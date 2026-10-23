@@ -6,9 +6,9 @@ import { SCREENS } from '../support/screens'
 
 describe('pantallas', () => {
   for (const width of WIDTHS) {
-    for (const [name, route, text] of SCREENS) {
+    for (const [name, route, text, role = 'agricultor'] of SCREENS) {
       it(`${name} se dibuja en ${width} px`, async () => {
-        await renderApp({ role: 'admin', route, width })
+        await renderApp({ role, route, width })
         expect(await ready(text)).toBeInTheDocument()
       })
     }
@@ -48,7 +48,7 @@ describe('pantallas', () => {
   })
 
   it('los formularios del registro rápido se abren', async () => {
-    const { user } = await renderApp({ role: 'admin' })
+    const { user } = await renderApp({ role: 'agricultor' })
     await ready('RESUMEN DE HOY')
     const open = async (action, button) => {
       await user.click(screen.getByRole('button', { name: 'Registrar' }))
@@ -65,7 +65,7 @@ describe('pantallas', () => {
 
   it('un gasto válido se envía una sola vez con su clave', async () => {
     const backend = createFakeBackend()
-    const { user } = await renderApp({ role: 'admin', backend })
+    const { user } = await renderApp({ role: 'agricultor', backend })
     await ready('RESUMEN DE HOY')
     await user.click(screen.getByRole('button', { name: 'Registrar' }))
     await user.click(await screen.findByText('Gasto'))
@@ -77,19 +77,19 @@ describe('pantallas', () => {
   })
 
   it('los formularios de insumos y procesos se abren', async () => {
-    const supply = await renderApp({ role: 'admin', route: '/mas/inventario' })
+    const supply = await renderApp({ role: 'agricultor', route: '/mas/inventario' })
     await ready('Fertilizante triple 15')
     await supply.user.click(screen.getByRole('button', { name: 'Nuevo insumo' }))
     expect(await screen.findByRole('button', { name: 'Guardar insumo' })).toBeInTheDocument()
     supply.unmount()
-    const proc = await renderApp({ role: 'admin', route: '/mas/procesos' })
+    const proc = await renderApp({ role: 'agricultor', route: '/mas/procesos' })
     await ready('Secado de bijao lote 1')
     await proc.user.click(screen.getByRole('button', { name: 'Nuevo proceso' }))
     expect(await screen.findByRole('button', { name: 'Guardar proceso' })).toBeInTheDocument()
   })
 
   it('seleccionar un pago habilita el botón y pide confirmación', async () => {
-    const { user } = await renderApp({ role: 'admin', route: '/mas/pagos' })
+    const { user } = await renderApp({ role: 'contador', route: '/mas/pagos' })
     await ready('Pedro Nel Builes')
     const pay = screen.getByRole('button', { name: 'Marcar como pagado' })
     expect(pay).toBeDisabled()

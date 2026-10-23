@@ -49,7 +49,8 @@ import { ProcessDetailPage } from './pages/processes/ProcessDetailPage'
 import { AccountPage } from './pages/account/AccountPage'
 
 function Guarded({ allowed, children }) {
-  return allowed ? children : <Navigate to="/inicio" replace />
+  const { access } = useAuth()
+  return allowed ? children : <Navigate to={access.isAdmin ? '/panel' : '/inicio'} replace />
 }
 
 function Authenticated() {
@@ -68,8 +69,8 @@ function Authenticated() {
     <AppProvider>
       <Routes>
         <Route element={<AppShell />}>
-          <Route index element={<Navigate to="/inicio" replace />} />
-          <Route path="inicio" element={<HomePage />} />
+          <Route index element={<Navigate to={access.isAdmin ? '/panel' : '/inicio'} replace />} />
+          <Route path="inicio" element={access.isAdmin ? <Navigate to="/panel" replace /> : <HomePage />} />
           <Route path="produccion" element={<Guarded allowed={access.seesProduction}><ProductionPage /></Guarded>} />
           <Route path="produccion/siembras/:id" element={<Guarded allowed={access.seesProduction}><PlantingDetailPage /></Guarded>} />
           <Route path="produccion/siembras/:id/ciclos/:cycleId" element={<Guarded allowed={access.seesProduction}><CyclePage /></Guarded>} />
@@ -80,8 +81,8 @@ function Authenticated() {
           <Route path="dinero/movimientos" element={<Guarded allowed={access.seesMoney}><MovementsPage /></Guarded>} />
           <Route path="dinero/movimientos/:id" element={<Guarded allowed={access.seesMoney}><MovementDetailPage /></Guarded>} />
           <Route path="mas" element={<MorePage />} />
-          <Route path="mas/fincas" element={<FarmsPage />} />
-          <Route path="mas/fincas/:id" element={<FarmDetailPage />} />
+          <Route path="mas/fincas" element={<Guarded allowed={access.seesFarms}><FarmsPage /></Guarded>} />
+          <Route path="mas/fincas/:id" element={<Guarded allowed={access.seesFarms}><FarmDetailPage /></Guarded>} />
           <Route path="mas/fincas/:farmId/lotes/:lotId" element={<Guarded allowed={access.seesProduction}><LotDetailPage /></Guarded>} />
           <Route path="mas/trabajadores" element={<Guarded allowed={access.seesWorkers}><WorkersPage /></Guarded>} />
           <Route path="mas/trabajadores/:id" element={<Guarded allowed={access.seesWorkers}><WorkerDetailPage /></Guarded>} />
@@ -109,9 +110,9 @@ function Authenticated() {
           <Route path="mas/conocimiento/revision" element={<Guarded allowed={access.reviewsKnowledge}><KnowledgeReviewPage /></Guarded>} />
           <Route path="mas/conocimiento" element={<KnowledgePage />} />
           <Route path="mas/conocimiento/:id" element={<KnowledgeDetailPage />} />
-          <Route path="mas/panel" element={<Guarded allowed={access.seesAdminPanel}><PanelPage /></Guarded>} />
-          <Route path="mas/usuarios" element={<Guarded allowed={access.createsUsers}><UsersPage /></Guarded>} />
-          <Route path="mas/usuarios/:id" element={<Guarded allowed={access.createsUsers}><UserDetailPage /></Guarded>} />
+          <Route path="panel" element={<Guarded allowed={access.seesAdminPanel}><PanelPage /></Guarded>} />
+          <Route path="usuarios" element={<Guarded allowed={access.createsUsers}><UsersPage /></Guarded>} />
+          <Route path="usuarios/:id" element={<Guarded allowed={access.createsUsers}><UserDetailPage /></Guarded>} />
           <Route path="mas/cuenta" element={<AccountPage />} />
           <Route path="*" element={<Navigate to="/inicio" replace />} />
         </Route>

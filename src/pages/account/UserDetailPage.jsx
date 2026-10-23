@@ -15,7 +15,7 @@ export function UserDetailPage() {
     <DetailPage title="Perfil de usuario" subtitle="Cuenta, fincas y movimiento">
       <Loadable state={state} skeleton={<SkeletonList height={120} />}>
         {(user) => {
-          if (!user) return <Navigate to="/mas/usuarios" replace />
+          if (!user) return <Navigate to="/usuarios" replace />
           return (
             <>
               <div className="stack gap-12">

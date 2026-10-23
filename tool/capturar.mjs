@@ -6,7 +6,6 @@ import { SCREENS } from '../tests/support/screens.js'
 const URL_BASE = process.env.URL_BASE ?? 'http://localhost:3000'
 const OUT = process.env.CAPTURAS ?? 'build/capturas'
 const WIDTHS = (process.env.WIDTHS ?? '320,390,820,1280').split(',').map(Number)
-const ROLE = process.env.ROLE ?? 'admin'
 
 const CANDIDATES = [
   process.env.CHROME_PATH,
@@ -51,9 +50,12 @@ const problems = []
 for (const width of WIDTHS) {
   const page = await browser.newPage()
   await page.setViewport({ width, height: 900, deviceScaleFactor: 1 })
-  await page.evaluateOnNewDocument((role) => localStorage.setItem('agrogestion_access_token', `token-${role}`), ROLE)
-  for (const [name, route, text] of SCREENS) {
-    await page.goto(`${URL_BASE}${route}`, { waitUntil: 'networkidle0' })
+  await page.evaluateOnNewDocument(() => {
+    const role = new URLSearchParams(location.search).get('rol')
+    if (role) localStorage.setItem('agrogestion_access_token', `token-${role}`)
+  })
+  for (const [name, route, text, role = 'agricultor'] of SCREENS) {
+    await page.goto(`${URL_BASE}${route}?rol=${role}`, { waitUntil: 'networkidle0' })
     await page.waitForFunction((t) => document.body.innerText.toLowerCase().includes(t.toLowerCase()), { timeout: 8000 }, text)
     const result = await page.evaluate(measure)
     const file = `${OUT}/${width}-${name.replaceAll(' ', '-')}.png`
