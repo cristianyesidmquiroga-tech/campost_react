@@ -9,6 +9,8 @@ React client for the AgroGestión FastAPI backend, with the same design system a
 
 </details>
 
+![Inicio del agricultor con avisos de riesgo y resumen de la finca](docs/capturas/inicio.webp)
+
 Cliente React del backend FastAPI de AgroGestión, con el mismo diseño que la app Flutter (Android, web y Windows). Cubre inicio de sesión, autorización de datos, fincas y lotes, siembras, ciclos y labores, conteo de plantas, vivero, eventos adversos, dinero, trabajadores, inventario, procesos, pagos, pecuario, reportes, asistente, novedades y alertas regionales, glosario, biblioteca de conocimiento y su revisión, usuarios y cambio de contraseña. El administrador además tiene los perfiles de los usuarios y un panel de control con estadísticas de toda la aplicación: cultivos, tiempos de ciclo, cosechas, costos, zonas y productores. Cada perfil ve solo lo que sus permisos permiten.
 
 ## Ejecutar
